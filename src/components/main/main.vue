@@ -185,3 +185,8 @@ export default {
   }
 }
 </script>
+<style lang="less">
+  .main-layout-con{
+    background: white
+  }
+</style>
