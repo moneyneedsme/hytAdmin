@@ -66,6 +66,8 @@ export default {
 <style lang="less">
 .ivu-tree{
 	float: left;
-	margin-right: 20px;
+  margin-right: 20px;
+  width: 150px;
+  min-height: 500px;
 }
 </style>
