@@ -10,10 +10,7 @@
       <Button  type="primary">绑定协议</Button>
       <Button  type="primary">购买服务</Button>
       <Button  type="primary">导出</Button>
-      <Table :columns="columns11" :data="dataTable" border height="500" :loading='tableLoading'>
-        <template slot-scope="{ row,index}" slot="index">
-            <strong>{{ index }}</strong>
-        </template>
+      <Table :columns="columns11" :data="dataTable" border height="700" :loading='tableLoading'>
         <template slot-scope="{ row, index }" slot="edit">
             <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>
         </template>
@@ -40,66 +37,77 @@ export default {
         {
           title: ' ',
           align: 'center',
-          slot: 'index',
-          maxWidth: 40
+          type: 'index',
+          maxWidth: 40,
+          tooltip:true
         },
         {
           title: '编辑',
           align: 'center',
           slot: 'edit',
-          maxWidth: 50
+          maxWidth: 50,
+          tooltip:true
         },
         {
           title: '商户名称',
           key: 'name',
           align: 'center',
-          minWidth: 120
+          minWidth: 120,
+          tooltip:true
         },
         {
           title: '可用余额',
           key: 'balance',
           align: 'center',
-          maxWidth: 80
+          maxWidth: 80,
+          tooltip:true
         },
         {
           title: '可结算金额',
           key: 'amount',
           align: 'center',
-          maxWidth: 80
+          maxWidth: 80,
+          tooltip:true
         },
         {
           title: '已结算金额',
           key: 'settled',
           align: 'center',
-          maxWidth: 80
+          maxWidth: 80,
+          tooltip:true
         },
         {
           title: '收款模式',
           key: 'paymentModel',
-          align: 'center'
+          align: 'center',
+          tooltip:true
         },
         {
           title: '联系人',
           key: 'contacts',
-          align: 'center'
+          align: 'center',
+          tooltip:true
         },
         {
           title: '联系电话',
           key: 'phone',
           align: 'center',
-          minWidth: 50
+          minWidth: 50,
+          tooltip:true
         },
         {
           title: '注册日期',
           key: 'regdate',
           align: 'center',
-          minWidth: 25
+          minWidth: 25,
+          tooltip:true
         },
         {
           title: '到期日期',
           key: 'dueDate',
           align: 'center',
-          minWidth: 25
+          minWidth: 25,
+          tooltip:true
         }
       ],
       dataTable: [
@@ -128,7 +136,7 @@ export default {
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .ivu-input-wrapper{
     width: 150px;
     margin-right:5px;

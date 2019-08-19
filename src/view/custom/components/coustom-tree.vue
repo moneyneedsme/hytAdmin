@@ -1,9 +1,5 @@
 <template>
-	<div>
 		<Tree :data="data1" @on-select-change='treeSelect'></Tree>
-		<router-view>
-		</router-view>
-  </div>
 </template>
 
 <script>
@@ -54,7 +50,7 @@ export default {
   },
   methods: {
     treeSelect (all) {
-      console.log(all[0].id)
+      console.log(all)
     }
   },
   mounted () {
@@ -63,7 +59,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .ivu-tree{
 	float: left;
   margin-right: 20px;

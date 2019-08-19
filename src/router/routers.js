@@ -110,6 +110,98 @@ export default [
     ]
   },
   {
+    path: '/commodity',
+    name: '商品',
+    meta: {
+      icon: 'md-menu',
+      title: '商品'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'goodsCommodity',
+        name: '商品管理',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-funnel',
+          title: '商品管理'
+        },
+        component: () => import('@/view/custom/commodity/goodsCommodity')
+      },
+      {
+        path: 'commodityTypes',
+        name: '商品类型',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-funnel',
+          title: '商品类型'
+        },
+        component: () => import('@/view/custom/commodity/commodityTypes')
+      }
+    ]
+  },
+  {
+    path: '/equipment',
+    name: '设备',
+    meta: {
+      icon: 'md-menu',
+      title: '设备'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'deviceManagement',
+        name: '设备管理',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-funnel',
+          title: '设备管理'
+        },
+        component: () => import('@/view/custom/equipment/deviceManagement')
+      },
+      {
+        path: 'troubleshooting',
+        name: '故障报修',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-funnel',
+          title: '故障报修'
+        },
+        component: () => import('@/view/custom/equipment/troubleshooting')
+      },
+      {
+        path: 'GIS',
+        name: 'GIS',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-funnel',
+          title: 'GIS'
+        },
+        component: () => import('@/view/custom/equipment/GIS')
+      },
+      {
+        path: 'subareaLine',
+        name: '分区线路',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-funnel',
+          title: '分区线路'
+        },
+        component: () => import('@/view/custom/equipment/subareaLine')
+      },
+      {
+        path: 'goodwayGoods',
+        name: '货道商品',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-funnel',
+          title: '货道商品'
+        },
+        component: () => import('@/view/custom/equipment/goodwayGoods')
+      }
+    ]
+  },
+  {
     path: '/401',
     name: 'error_401',
     meta: {
