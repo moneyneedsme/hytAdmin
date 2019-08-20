@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <Row>
       <i-col>
         <Card>
@@ -63,47 +63,47 @@
         拖动这里即可拖动整个弹窗
       </Modal>
     </Row>
-  </div>
+  </div> -->
 </template>
 
 <script>
-export default {
-  name: 'directive_page',
-  data () {
-    return {
-      modalVisible: false,
-      options: {
-        trigger: '.ivu-modal-body',
-        body: '.ivu-modal',
-        recover: true
-      },
-      buttonOptions: {
-        trigger: '.draggable-btn',
-        body: '.draggable-btn'
-      },
-      statu: 1,
-      inputValue: '这是输入的内容'
-    }
-  },
-  computed: {
-    clipOptions () {
-      return {
-        value: this.inputValue,
-        success: (e) => {
-          this.$Message.success('复制成功')
-        },
-        error: () => {
-          this.$Message.error('复制失败')
-        }
-      }
-    }
-  },
-  methods: {
-    showModal () {
-      this.modalVisible = true
-    }
-  }
-}
+// export default {
+//   name: 'directive_page',
+//   data () {
+//     return {
+//       modalVisible: false,
+//       options: {
+//         trigger: '.ivu-modal-body',
+//         body: '.ivu-modal',
+//         recover: true
+//       },
+//       buttonOptions: {
+//         trigger: '.draggable-btn',
+//         body: '.draggable-btn'
+//       },
+//       statu: 1,
+//       inputValue: '这是输入的内容'
+//     }
+//   },
+//   computed: {
+//     clipOptions () {
+//       return {
+//         value: this.inputValue,
+//         success: (e) => {
+//           this.$Message.success('复制成功')
+//         },
+//         error: () => {
+//           this.$Message.error('复制失败')
+//         }
+//       }
+//     }
+//   },
+//   methods: {
+//     showModal () {
+//       this.modalVisible = true
+//     }
+//   }
+// }
 </script>
 
 <style>

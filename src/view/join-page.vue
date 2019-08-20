@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <Card shadow title="社区">
       <row class="join-page" :gutter="32">
         <i-col span="10">
@@ -33,17 +33,17 @@
         </i-col>
       </row>
     </Card>
-  </div>
+  </div> -->
 </template>
 
 <script>
-export default {
-  name: 'join_page',
-  data () {
-    return {
-    }
-  }
-}
+// export default {
+//   name: 'join_page',
+//   data () {
+//     return {
+//     }
+//   }
+// }
 </script>
 <style>
   .join-page{

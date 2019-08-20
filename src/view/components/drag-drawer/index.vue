@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <!-- <Card>
     <h3 style="padding: 10px 0;">drag-drawer组件是对iview的drawer组件的封装，在支持drawer所有api的基础上，支持可拖动和footer底部插槽</h3>
     <div style="padding: 10px 0">
       <b>
@@ -50,40 +50,40 @@
       <Button @click="showBDrawer3 = true">显示多层</Button>
       <p v-for="n in 200" :key="n">{{ n }}</p>
     </drag-drawer>
-  </Card>
+  </Card> -->
 </template>
 
 <script>
-import DragDrawer from '_c/drag-drawer'
-export default {
-  name: 'drag_drawer_page',
-  components: {
-    DragDrawer
-  },
-  data () {
-    return {
-      showWindowBDrawer: false,
-      showContainerBDrawer: false,
-      showBDrawer3: false,
-      width1: 300,
-      width2: 200,
-      placement: false,
-      draggable: true
-    }
-  },
-  computed: {
-    placementComputed () {
-      return this.placement ? 'left' : 'right'
-    }
-  },
-  methods: {
-    handleResize (event) {
-      const { atMin } = event
-      /* eslint-disable */
-      console.log(atMin);
-    },
-  }
-}
+// import DragDrawer from '_c/drag-drawer'
+// export default {
+//   name: 'drag_drawer_page',
+//   components: {
+//     DragDrawer
+//   },
+//   data () {
+//     return {
+//       showWindowBDrawer: false,
+//       showContainerBDrawer: false,
+//       showBDrawer3: false,
+//       width1: 300,
+//       width2: 200,
+//       placement: false,
+//       draggable: true
+//     }
+//   },
+//   computed: {
+//     placementComputed () {
+//       return this.placement ? 'left' : 'right'
+//     }
+//   },
+//   methods: {
+//     handleResize (event) {
+//       const { atMin } = event
+//       /* eslint-disable */
+//       console.log(atMin);
+//     },
+//   }
+// }
 </script>
 
 <style lang="less">

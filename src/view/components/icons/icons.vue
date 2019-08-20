@@ -1,5 +1,5 @@
 <template>
-  <Row>
+  <!-- <Row>
     <i-col span="16">
       <Row v-for="i in (customIconList.length / 3)" :key="`custom-icon-row-${i}`">
         <i-col span="8" v-for="item in customIconList.slice((i - 1) * 3, i * 3)" :key="`custom-icon-${item}`">
@@ -26,31 +26,31 @@
         <p class="intro-p"><Icon style="margin-right: 10px;" :size="10" type="heart"/>CommonIcon组件同时支持iView内置图标类型和自定义图标类型，为了区别这两种类型，需要在自定义图标名称前加下划线"_"</p>
       </Card>
     </i-col>
-  </Row>
+  </Row> -->
 </template>
 
 <script>
-import Icons from '_c/icons'
-import CommonIcon from '_c/common-icon'
-export default {
-  name: 'icons_pages',
-  components: {
-    Icons,
-    CommonIcon
-  },
-  data () {
-    return {
-      customIconList: [
-        'woman',
-        'man',
-        'smile',
-        'meh',
-        'frown',
-        'bear'
-      ]
-    }
-  }
-}
+// import Icons from '_c/icons'
+// import CommonIcon from '_c/common-icon'
+// export default {
+//   name: 'icons_pages',
+//   components: {
+//     Icons,
+//     CommonIcon
+//   },
+//   data () {
+//     return {
+//       customIconList: [
+//         'woman',
+//         'man',
+//         'smile',
+//         'meh',
+//         'frown',
+//         'bear'
+//       ]
+//     }
+//   }
+// }
 </script>
 
 <style lang="less">

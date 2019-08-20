@@ -17,8 +17,8 @@ export default {
     userId: '',
     avatarImgPath: '',
     token: getToken(),
-    access: '',
-    hasGetInfo: false,
+    // access: '',
+    hasGetInfo: false, //判断是否获取到数据
     unreadCount: 0,
     messageUnreadList: [],
     messageReadedList: [],
@@ -35,9 +35,9 @@ export default {
     setUserName (state, name) {
       state.userName = name
     },
-    setAccess (state, access) {
-      state.access = access
-    },
+    // setAccess (state, access) {
+    //   state.access = access
+    // },
     setToken (state, token) {
       state.token = token
       setToken(token)
@@ -94,7 +94,7 @@ export default {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('setToken', '')
-          commit('setAccess', [])
+          // commit('setAccess', [])
           resolve()
         }).catch(err => {
           reject(err)
@@ -114,7 +114,7 @@ export default {
             commit('setAvatar', data.avatar)
             commit('setUserName', data.name)
             commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
+            // commit('setAccess', data.access)
             commit('setHasGetInfo', true)
             resolve(data)
           }).catch(err => {

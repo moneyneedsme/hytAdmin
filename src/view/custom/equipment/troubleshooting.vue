@@ -63,12 +63,13 @@ export default {
           title: ' ',
           align: 'center',
           type:'index',
-          maxWidth: 40,
+          maxWidth: 60,
           tooltip:true
         },
         {
+          title: '22',
           type: 'selection',
-          maxWidth: 40,
+          maxWidth: 60,
           align: 'center',
           tooltip:true
         },

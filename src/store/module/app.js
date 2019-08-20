@@ -32,7 +32,7 @@ export default {
     homeRoute: {},
     local: localRead('local'),
     errorList: [],
-    hasReadErrorPage: false
+    // hasReadErrorPage: false
   },
   getters: {
     menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
@@ -59,12 +59,13 @@ export default {
       state.tagNavList = tagList
       setTagNavListInLocalstorage([...tagList])
     },
-    closeTag (state, route) {
-      let tag = state.tagNavList.filter(item => routeEqual(item, route))
-      route = tag[0] ? tag[0] : null
-      if (!route) return
-      closePage(state, route)
-    },
+    //关闭本页
+    // closeTag (state, route) {
+    //   let tag = state.tagNavList.filter(item => routeEqual(item, route))
+    //   route = tag[0] ? tag[0] : null
+    //   if (!route) return
+    //   closePage(state, route)
+    // },
     addTag (state, { route, type = 'unshift' }) {
       let router = getRouteTitleHandled(route)
       if (!routeHasExist(state.tagNavList, router)) {
@@ -83,13 +84,14 @@ export default {
     addError (state, error) {
       state.errorList.push(error)
     },
-    setHasReadErrorLoggerStatus (state, status = true) {
-      state.hasReadErrorPage = status
-    }
+    //错误日志
+    // setHasReadErrorLoggerStatus (state, status = true) {
+    //   state.hasReadErrorPage = status
+    // }
   },
   actions: {
     addErrorLog ({ commit, rootState }, info) {
-      if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
+      // if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
       const { user: { token, userId, userName } } = rootState
       let data = {
         ...info,

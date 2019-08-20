@@ -1,5 +1,5 @@
 <template>
-  <div>
+	<div>
 		<div>
 			<Table border ref="selection" :columns="columns4" :data="data1" height="700">
 					<template slot-scope="{ row, index }" slot="container">
@@ -30,14 +30,14 @@ export default {
           title: ' ',
           align: 'center',
           type:'index',
-          maxWidth: 40,
+          maxWidth: 60,
           tooltip:true
 				},
 				{
           title: '操作',
 					align: 'center',
 					slot:'operation',
-          maxWidth: 40,
+          maxWidth: 60,
           tooltip:true
 				},
 				{

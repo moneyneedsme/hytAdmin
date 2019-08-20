@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <Row :gutter="10">
       <i-col span="6">
         <Card>
@@ -19,23 +19,23 @@
         </Card>
       </i-col>
     </Row>
-  </div>
+  </div> -->
 </template>
 
 <script>
-export default {
-  name: 'i18n_page',
-  data () {
-    return {
-      modalVisible: false
-    }
-  },
-  computed: {
-    content () {
-      return this.$t('content')
-    }
-  }
-}
+// export default {
+//   name: 'i18n_page',
+//   data () {
+//     return {
+//       modalVisible: false
+//     }
+//   },
+//   computed: {
+//     content () {
+//       return this.$t('content')
+//     }
+//   }
+// }
 </script>
 
 <style lang="less">
