@@ -346,7 +346,7 @@ export const routeHasExist = (tagNavList, routeItem) => {
   })
   return res
 }
-
+//本地存储
 export const localSave = (key, value) => {
   localStorage.setItem(key, value)
 }

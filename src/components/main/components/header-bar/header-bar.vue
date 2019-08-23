@@ -8,8 +8,8 @@
   </div>
 </template>
 <script>
-import siderTrigger from './sider-trigger'
-import customBreadCrumb from './custom-bread-crumb'
+import siderTrigger from './sider-trigger' // 头部侧边栏收放按钮
+import customBreadCrumb from './custom-bread-crumb' //头部面包屑导航
 import './header-bar.less'
 export default {
   name: 'HeaderBar',

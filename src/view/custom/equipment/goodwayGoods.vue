@@ -1,5 +1,5 @@
 <template>
-	<div>
+		<div>
 		<div>
 			<Table border ref="selection" :columns="columns4" :data="data1" height="700">
 					<template slot-scope="{ row, index }" slot="container">

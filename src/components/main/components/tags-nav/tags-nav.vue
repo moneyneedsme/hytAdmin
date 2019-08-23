@@ -11,14 +11,16 @@
         </DropdownMenu>
       </Dropdown>
     </div>
-    <ul v-show="visible" :style="{left: contextMenuLeft + 'px', top: contextMenuTop + 'px'}" class="contextmenu">
+    <!-- <ul v-show="visible" :style="{left: contextMenuLeft + 'px', top: contextMenuTop + 'px'}" class="contextmenu">
       <li v-for="(item, key) of menuList" @click="handleTagsOption(key)" :key="key">{{item}}</li>
-    </ul>
+    </ul> -->
+    <!-- 向左移动箭头按钮 -->
     <div class="btn-con left-btn">
       <Button type="text" @click="handleScroll(240)">
         <Icon :size="18" type="ios-arrow-back" />
       </Button>
     </div>
+    <!-- 向右移动箭头按钮 -->
     <div class="btn-con right-btn">
       <Button type="text" @click="handleScroll(-240)">
         <Icon :size="18" type="ios-arrow-forward" />

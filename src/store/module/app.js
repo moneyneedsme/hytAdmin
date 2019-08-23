@@ -1,3 +1,4 @@
+import Main from '@/components/main'
 import {
   getBreadCrumbList,
   setTagNavListInLocalstorage,
@@ -17,6 +18,7 @@ import routers from '@/router/routers'
 import config from '@/config'
 const { homeName } = config
 
+//单个页面导航条 关闭 
 const closePage = (state, route) => {
   const nextRoute = getNextRoute(state.tagNavList, route)
   state.tagNavList = state.tagNavList.filter(item => {
@@ -27,24 +29,33 @@ const closePage = (state, route) => {
 
 export default {
   state: {
-    breadCrumbList: [],
-    tagNavList: [],
+    breadCrumbList: [], //当前页面路由的信息
+    tagNavList: [],   //页面导航条  
     homeRoute: {},
     local: localRead('local'),
-    errorList: [],
+    errorList: [], //错误日志 在config/index.js中设置 可以删除掉
     // hasReadErrorPage: false
+    routersList:[]  //list 列表
   },
   getters: {
-    menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
-    errorCount: state => state.errorList.length
+    // menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
+    menuList: (state, getters, rootState) => [...getMenuByRouter(state.routersList),...getMenuByRouter(routers)],
+    errorCount: state => state.errorList.length  //错误日志 在config/index.js中设置 可以删除掉
   },
   mutations: {
+    //动态添加路由
+    setRoutersList(state,routersList){
+      state.routersList = routersList
+    },
+    //设置当前路由信息
     setBreadCrumb (state, route) {
-      state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
+      // getBreadCrumbList(route, state.homeRoute) 当前路由metched
+      state.breadCrumbList = getBreadCrumbList(route, state.homeRoute);
     },
     setHomeRoute (state, routes) {
       state.homeRoute = getHomeRoute(routes, homeName)
     },
+    // 设置导航栏标签
     setTagNavList (state, list) {
       let tagList = []
       if (list) {
@@ -59,13 +70,14 @@ export default {
       state.tagNavList = tagList
       setTagNavListInLocalstorage([...tagList])
     },
-    //关闭本页
-    // closeTag (state, route) {
-    //   let tag = state.tagNavList.filter(item => routeEqual(item, route))
-    //   route = tag[0] ? tag[0] : null
-    //   if (!route) return
-    //   closePage(state, route)
-    // },
+    //导航标签事件 关闭本页
+    closeTag (state, route) {
+      let tag = state.tagNavList.filter(item => routeEqual(item, route))
+      route = tag[0] ? tag[0] : null
+      if (!route) return
+      closePage(state, route)
+    },
+    //导航栏里添加标签
     addTag (state, { route, type = 'unshift' }) {
       let router = getRouteTitleHandled(route)
       if (!routeHasExist(state.tagNavList, router)) {
@@ -74,7 +86,7 @@ export default {
           if (router.name === homeName) state.tagNavList.unshift(router)
           else state.tagNavList.splice(1, 0, router)
         }
-        setTagNavListInLocalstorage([...state.tagNavList])
+        setTagNavListInLocalstorage([...state.tagNavList])  //本地存储和获取标签导航列表
       }
     },
     setLocal (state, lang) {
