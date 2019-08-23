@@ -70,6 +70,15 @@ const router1 = [
 ]
 const router2 = [
   {
+    path: '/login',
+    name: 'login',
+    meta: {
+      title: 'Login - 登录',
+      hideInMenu: true
+    },
+    component: () => import('@/view/login/login.vue')
+  },
+  {
     path: '/',
     name: '_home',
     redirect: '/home',
@@ -227,10 +236,10 @@ const router2 = [
     children: [
       {
         path: 'clientManagement',
-        name: '客户管理',
+        name: '会员',
         meta: {
           icon: 'md-funnel',
-          title: '客户管理'
+          title: '会员'
         },
         component: CLIENTMANAGEMENT
       },
@@ -247,7 +256,7 @@ const router2 = [
   },
   // 库存类
   {
-    path: '/stock ',
+    path: '/stock',
     name: '库存',
     meta: {
       icon: 'md-menu',
@@ -262,7 +271,6 @@ const router2 = [
           icon: 'md-funnel',
           title: '库存监控'
         },
-        path: '/stock ',
         component: STOCKCONTROL
       },
       {
