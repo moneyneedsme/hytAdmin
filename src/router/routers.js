@@ -192,6 +192,70 @@ export default [
       }
     ]
   },
+
+  // 客户类
+  {
+    path: '/client',
+    name: '客户',
+    meta: {
+      icon: 'md-menu',
+      title: '客户'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'clientManagement',
+        name: '客户管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '客户管理'
+        },
+        component: () => import('@/view/custom/client/clientManagement')
+      },
+      {
+        path: 'integral',
+        name: '积分',
+        meta: {
+          icon: 'md-funnel',
+          title: '积分'
+        },
+        component: () => import('@/view/custom/client/integral')
+      }
+    ]
+  },
+
+  // 库存类
+  {
+    path: '/stock ',
+    name: '库存',
+    meta: {
+      icon: 'md-menu',
+      title: '库存'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'stockControl',
+        name: '库存监控',
+        meta: {
+          icon: 'md-funnel',
+          title: '库存监控'
+        },
+        path: '/stock ',
+        component: () => import('@/view/custom/stock/stockControl')
+      },
+      {
+        path: 'stockAdd',
+        name: '补货记录',
+        meta: {
+          icon: 'md-funnel',
+          title: '补货记录'
+        },
+        component: () => import('@/view/custom/stock/stockAdd')
+      }
+    ]
+  },
+
   {
     path: '/401',
     name: 'error_401',
