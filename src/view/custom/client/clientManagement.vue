@@ -4,7 +4,7 @@
     <Coustom-tree></Coustom-tree>
 
     <!-- 右边内容 -->
-    <div class="clientManagementContain">
+    <div class="clientManagementContent">
       <Input class="input" v-model="clientName"  placeholder="请输入用户名" style="width: 196px" clearable/>
       <Input class="input" v-model="clientPhone"  placeholder="请输入手机号码" style="width: 196px" clearable/>
       <Button type="primary" icon="ios-search">查询</Button>
@@ -214,7 +214,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .clientManagementContain{
+  .clientManagementContent{
     .input {
       margin-right: 10px;
     }
