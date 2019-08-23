@@ -2,35 +2,42 @@
 	<div>
       <Coustom-tree></Coustom-tree>
       <div>
-        <Input v-model="num"  placeholder="商品编号" clearable/>
+        <Input v-model="numID"  placeholder="商品id" clearable/>
         <Input v-model="name"  placeholder="商品名称" clearable/>
-				<Select v-model="selectValue">
-						<Option v-for="(item,index) in selectData" :value="item.value" :key="item.value+index">{{ item.label }}</Option>
-				</Select>
-        <Button>查询</Button>
-				<Button  type="primary">新增</Button>
-				<Button  type="primary">删除</Button>
-        <Table border ref="selection" :columns="columns4" :data="data1" height="700">
-          <template slot-scope="{ row, index }" slot="delete">
-              <Button type="error" size="small" @click="show(index)">删除</Button>
-          </template>
+        <Cascader :data="selectData" v-model="selectValue" :value="selectValue" ></Cascader>
+        <Button @click='getPageDatas'>查询</Button>{{selectValue}}
+        <Table border ref="selection" :columns="columns" :data="datas" height="700">
 					<template slot-scope="{ row, index }"  @click="show(index)"  slot="edit">
               <Button type="primary" size="small" >编辑</Button>
+              <Button type="error" size="small" @click="modalDel=true;delID=row.id;delIndex=index">删除</Button>
           </template>
 					<template slot-scope="{ row, index }" slot="img">
-              <img src="http://image.szrousen.cn/zkong/Goods/picture/201903/20190302142019ODO.png" @click="show(index)">
+              <img :src="row.imageAddress" @click="show(index)">
           </template>
-					<template slot-scope="{ row, index }" slot="status">
-              <Button type="success" size="small" @click="show(index)" v-if='index%2'>正常</Button>
-							<Button type="error" size="small" @click="show(index)" v-else>禁用</Button>
+					<template slot-scope="{ row}" slot="status">
+              <Button type="success" size="small" @click="enable(row.enable)" v-if='row.enable=="START"'>上架</Button>
+							<Button type="error" size="small" @click="enable(row.enable)" v-else>下架</Button>
           </template>
         </Table>
-        <Page :total="100" show-elevator />
+        <Page :total="total" show-elevator :current='pageNum' @on-change='pageChange' :page-size='pageSize'/>
       </div>
+      <Modal v-model="modalDel" width="360">
+        <p slot="header" style="color:#f60;text-align:center">
+            <Icon type="ios-information-circle"></Icon>
+            <span>警告</span>
+        </p>
+        <div style="text-align:center">
+            <p>确定要删除吗？</p>
+        </div>
+        <div slot="footer">
+            <Button type="error" size="large" long :loading="modal_loading" @click="del">删除</Button>
+        </div>
+      </Modal>
   </div>
 </template>
 <script>
-import CoustomTree from '../components/coustom-tree'
+import CoustomTree from '../components/coustom-tree';
+import {netWork} from '@/api/data'
 export default {
   components: {
     CoustomTree
@@ -38,74 +45,49 @@ export default {
   name: 'goodsCommodity',
   data () {
     return {
-      num:'',
+      modal_loading:false,//删除的loading
+      delID:null,//删除的ID
+      delIndex:null,//删除的索引
+      modalDel:false,
+      numID:'',
       name: '',
-			data1: [],
-			selectValue:'',
-			selectData:[],
-      columns4: [
-        {
-          title: ' ',
-          align: 'center',
-          type:'index',
-          maxWidth: 40,
-          tooltip:true
-        },
-        {
-          type: 'selection',
-          maxWidth: 40,
-          align: 'center',
-          tooltip:true
-        },
-        {
-          title: '删除',
-          align: 'center',
-          slot: 'delete',
-          maxWidth: 70,
-          tooltip:true
-				},
-				{
-          title: '编辑',
-          align: 'center',
-          slot: 'edit',
-          maxWidth: 70,
-          tooltip:true
-				},
+			selectValue:[],
+      selectData:[],
+      pageNum:1,
+      total:null,
+      pageSize:15,
+			datas: [],
+      columns: [
 				{
           title: '商品编号',
-          key: 'goodsNum',
+          key: 'productCode',
           align: 'center',
-          maxWidth:70,
           tooltip:true
         },
         {
           title: '商品名称',
-          key: 'goodsName',
+          key: 'productName',
           align: 'center',
-          minWidth: 100,
-          tooltip:true
-        },
-        {
-          title: '售卖价格',
-          key: 'price',
-					align: 'center',
-					maxWidth: 100,
           tooltip:true
         },
         {
           title: '商品类型',
-          key: 'goodsType',
+          key: 'categoryId',
           align: 'center',
-          maxWidth: 120,
           tooltip:true
-				},
-				{
-          title: '显示顺序',
-          key: 'order',
-          align: 'center',
-          maxWidth: 70,
+        },
+        {
+          title: '进价',
+          key: 'buyPrice',
+					align: 'center',
           tooltip:true
-				},
+        },
+        {
+          title: '售价',
+          key: 'salePrice',
+					align: 'center',
+          tooltip:true
+        },
 				{
           title: '商品图片',
           align: 'center',
@@ -113,75 +95,104 @@ export default {
           tooltip:true
 				},
 				{
-          title: '重量',
-          key: 'weight',
+          title: '商品描述',
+          key: 'productDesc',
           align: 'center',
-          maxWidth: 70,
           tooltip:true
-				},
-				{
-          title: '误差',
-          key: 'error',
-          align: 'center',
-          maxWidth: 70,
-          tooltip:true
-				},
+        },
 				{
           title: '状态',
           slot: 'status',
           align: 'center',
-          maxWidth: 70,
-          tooltip:true
-        },
-        {
-          title: '创建时间',
-          key: 'regdate',
-          align: 'center',
-          minWidth: 25,
           tooltip:true
         },
         {
           title: '更新时间',
-          key: 'updataDate',
+          key: 'updateDate',
           align: 'center',
-          minWidth: 25,
           tooltip:true
-        }
+        },
+        {
+          title: '操作',
+          align: 'center',
+          slot: 'edit',
+          tooltip:true
+				},
       ]
     }
   },
   methods: {
+    
     show (index) {
       console.log(index%2)
-    }
+    },
+    del(){
+      this.modal_loading = true;
+      let url = '/product/productDelete?id='+this.delID
+      netWork(url).then(res=>{
+        if(res.data.code===200){
+          this.modal_loading = false;
+          this.modalDel = false;
+          this.datas = this.datas.splice(this.delIndex,1)
+        }else if(res.data.code===500){
+          this.$Message.error(res.data.message);
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+    enable(value){
+      alert(value)
+    },
+    pageChange(value){
+      this.pageNum = value;
+      this.getPageDatas();
+    },
+    getPageDatas(){
+      let data = {
+        id:this.numID,
+        productName:this.name,
+        pageNum:this.pageNum,
+        pageSize:this.pageSize
+      }
+      netWork('/product/findProductPage',data).then(res=>{
+        if(res.data.code===200){
+          this.pageNum = res.data.result.pageNum;
+          this.total = res.data.result.total;
+          this.datas = res.data.result.list;
+        }else if(res.data.code===500){
+          this.$Message.error(res.data.message);
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+    getSelectData(){
+      netWork('/category/findCategoryTree').then(res=>{
+        // console.log(res.data)
+        if(res.data.code===200){
+          this.selectData = res.data.result;
+          console.log(res.data.result)
+        }else if(res.data.code===500){
+          this.$Message.error(res.data.message);
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
   },
   mounted () {
-    const data = {
-			goodsNum:200,
-			goodsName:'爆米花',
-			dept:'巧克力榛子现磨咖啡',
-			price:100.03,
-			goodsType:'咖啡机600',
-			order:100,
-			weight:0.004,
-			error:0.0001,
-			regdate:'2019-04-09 10:19:58',
-      updataDate:'2020-04-09 10:19:58'
-    }
-		this.data1 = Array(20).fill(data);
-		const SData = {
-			value: 'New York',
-			label: 'New York'
-		}
-		this.selectData = Array(20).fill(SData);
+    this.getSelectData();
+    this.getPageDatas();
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .ivu-input-wrapper,.ivu-select{
+  .ivu-input-wrapper,.ivu-cascader {
     width: 180px;
     margin-right:5px;
+    display: inline-block;
 	}
 	.ivu-btn{
     margin-right: 10px;

@@ -2,7 +2,6 @@ import MAIN from '@/components/main'
 import HOME from '@/view/single-page/home/home';
 import INFO from '@/view/custom/merchant/info';
 import ACCOUNT from '@/view/custom/merchant/account';
-import PAYCONFIG from '@/view/custom/merchant/payConfig';
 import GOODSCOMMODITY from '@/view/custom/commodity/goodsCommodity';
 import COMMODITYTYPES from '@/view/custom/commodity/commodityTypes';
 import DEVICEMANAGEMENT from '@/view/custom/equipment/deviceManagement';
@@ -62,15 +61,6 @@ export default [
 				},
 				component: ACCOUNT
 			},
-			{
-				path: 'payConfig',
-				name: 'payConfig',
-				meta: {
-					icon: 'md-funnel',
-					title: '支付配置'
-				},
-				component: PAYCONFIG
-			}
 		]
 	},
 	{

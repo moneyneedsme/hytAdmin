@@ -2,7 +2,6 @@ import MAIN from '@/components/main'
 import HOME from '@/view/single-page/home/home';
 import INFO from '@/view/custom/merchant/info';
 import ACCOUNT from '@/view/custom/merchant/account';
-import PAYCONFIG from '@/view/custom/merchant/payConfig';
 import GOODSCOMMODITY from '@/view/custom/commodity/goodsCommodity';
 import COMMODITYTYPES from '@/view/custom/commodity/commodityTypes';
 import DEVICEMANAGEMENT from '@/view/custom/equipment/deviceManagement';
@@ -102,7 +101,7 @@ const router2 = [
     component: () => import('@/components/main/main'),
     children: [
       {
-        path: 'Information',
+        path: '/merchant/Information',
         name: 'Information',
         meta: {
           icon: 'md-funnel',
@@ -111,22 +110,13 @@ const router2 = [
         component: INFO
       },
       {
-        path: 'account',
+        path: '/merchant/account',
         name: 'account',
         meta: {
           icon: 'md-funnel',
           title: '商户账号'
         },
         component: ACCOUNT
-      },
-      {
-        path: 'payConfig',
-        name: 'payConfig',
-        meta: {
-          icon: 'md-funnel',
-          title: '支付配置'
-        },
-        component: PAYCONFIG
       }
     ]
   },
