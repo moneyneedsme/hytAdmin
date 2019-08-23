@@ -5,8 +5,9 @@
 </template>
 
 <script>
+// import Main from '@/components/main'
 export default {
-  name: 'App'
+  name: 'App',
 }
 </script>
 

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import routes from './routers'
 import store from '@/store'
 import iView from 'iview'
+import {localRead} from "@/libs/util";
 // import { setToken, getToken, canTurnTo, setTitle } from '@/libs/util'
 import { setToken, getToken,setTitle } from '@/libs/util'
 import config from '@/config'
@@ -37,7 +38,20 @@ router.beforeEach((to, from, next) => {
       name: homeName // 跳转到homeName页
     })
   } else {
-    // console.log()
+    // if(!from.name){ //页面刷新 
+    //   const routersList = JSON.parse(localRead('dynamicRouters'));
+    //   const originRouteNames = router.options.routes.map(r => r.name);
+    //   // 需要解决重复加入问题
+    //   if (routersList && routersList.length && originRouteNames.indexOf(routersList[0].name) < 0) {
+    //       router.addRoutes(routersList)
+    //       store.commit('setRoutersList',routersList)
+    //   }
+    //   console.log(routersList)
+    //   console.log('页面刷新')
+    //   console.log(router.options.routes)
+    //   console.log(store.getters.menuList)
+    // }
+    // console.log(store._mutations.setRoutersList)
     if (store.state.user.hasGetInfo) {   //判断是否获取到数据
       // turnTo(to, store.state.user.access, next)   //store.state.user.access  == ['super_admin'] ['super_admin', 'admin']
       next();

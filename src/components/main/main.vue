@@ -1,5 +1,6 @@
 <template>
   <Layout style="height: 100%" class="main">
+    <!-- 侧边栏 -->
     <Sider hide-trigger collapsible :width="256" :collapsed-width="64" v-model="collapsed" class="left-sider" :style="{overflow: 'hidden'}">
       <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
         <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
@@ -10,14 +11,17 @@
       </side-menu>
     </Sider>
     <Layout>
+      <!-- 头部 -->
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
           <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
           <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
+          <!-- 错误日志 在config/index.js中设置 可以删除掉 -->
           <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </header-bar>
       </Header>
+      <!-- 内容块 -->
       <Content class="main-content-con">
         <Layout class="main-layout-con">
           <div class="tag-nav-wrapper">
@@ -37,7 +41,7 @@
 <script>
 import SideMenu from './components/side-menu'
 import HeaderBar from './components/header-bar'
-import TagsNav from './components/tags-nav'
+import TagsNav from './components/tags-nav'   //标签导航
 import User from './components/user'
 import ABackTop from './components/a-back-top'
 import Fullscreen from './components/fullscreen'
@@ -112,6 +116,7 @@ export default {
       'handleLogin',
       'getUnreadMessageCount'
     ]),
+    //页面跳转
     turnToPage (route) {
       let { name, params, query } = {}
       if (typeof route === 'string') name = route
@@ -133,11 +138,14 @@ export default {
     handleCollapsedChange (state) {
       this.collapsed = state
     },
+    // 导航关闭页面
     handleCloseTag (res, type, route) {
       if (type !== 'others') {
         if (type === 'all') {
+          //关闭所有页面 跳转到首页
           this.turnToPage(this.$config.homeName)
         } else {
+          //根据name/params/query判断两个路由对象是否相等
           if (routeEqual(this.$route, route)) {
             this.closeTag(route)
           }
@@ -145,12 +153,13 @@ export default {
       }
       this.setTagNavList(res)
     },
+    //点击导航标签事件
     handleClick (item) {
       this.turnToPage(item)
     }
   },
   watch: {
-    '$route' (newRoute) {
+    '$route' (newRoute) { //监听路由变化
       const { name, query, params, meta } = newRoute
       this.addTag({
         route: { name, query, params, meta },
@@ -171,6 +180,7 @@ export default {
     this.addTag({
       route: { name, params, query, meta }
     })
+   console.log(this.$route)
     this.setBreadCrumb(this.$route)
     // 设置初始语言
     this.setLocal(this.$i18n.locale)

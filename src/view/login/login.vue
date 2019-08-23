@@ -17,7 +17,10 @@
 
 <script>
 import LoginForm from '_c/login-form'
-import { mapActions } from 'vuex'
+import { mapActions,mapMutations} from 'vuex';
+import dynamicRouters from '@/router/dynamicRouters';
+import { getMenuByRouter,localSave} from "@/libs/util";
+import { setTimeout } from 'timers';
 export default {
   components: {
     LoginForm
@@ -27,6 +30,9 @@ export default {
       'handleLogin',
       'getUserInfo'
     ]),
+    ...mapMutations([
+      'setRoutersList'
+    ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
         this.getUserInfo().then(res => {
@@ -35,9 +41,25 @@ export default {
           })
         })
       })
-    }
-  }
+    },
+  },
+  mounted () {
+    // const routers = getMenuByRouter(dynamicRouters);
+    // const originRouteNames = this.$router.options.routes.map(r => r.name);
+		// // 需要解决重复加入问题
+    // if (routers && routers.length && originRouteNames.indexOf(routers[0].name) < 0) {
+		// 		this.$router.addRoutes(dynamicRouters)
+    //     this.setRoutersList(dynamicRouters);
+    //     console.log(this.$router.options.routes)
+    //     localSave('dynamicRouters',JSON.stringify(dynamicRouters))
+    // }
+    // // console.log(this.$store.getters.menuList)
+    // console.log(dynamicRouters)
+    // console.log(routers)
+		// console.log(this.$store.getters.menuList)
+	},
 }
+
 </script>
 
 <style>
