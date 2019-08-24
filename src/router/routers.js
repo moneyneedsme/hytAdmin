@@ -10,9 +10,11 @@ import GIS from '@/view/custom/equipment/GIS';
 import SUBAREALINE from '@/view/custom/equipment/subareaLine';
 import GOODWAYGOODS from '@/view/custom/equipment/goodwayGoods';
 import CLIENTMANAGEMENT from '@/view/custom/client/clientManagement';
-import INTEGRAL from '@/view/custom/client/integral'
-import STOCKCONTROL from '@/view/custom/stock/stockControl'
-import STOCKADD from '@/view/custom/stock/stockAdd'
+import INTEGRAL from '@/view/custom/client/integral';
+import STOCKCONTROL from '@/view/custom/stock/stockControl';
+import STOCKADD from '@/view/custom/stock/stockAdd';
+import DEPARTMENT from '@/view/custom/system/department'
+import USERMANAGEMENT from '@/view/custom/system/userManagement';
 
 
 // import parentView from '@/components/parent-view'
@@ -271,6 +273,37 @@ const router2 = [
           title: '补货记录'
         },
         component: STOCKADD
+      }
+    ]
+  },
+
+  // 系统类
+  {
+    path: '/system',
+    name: '系统',
+    meta: {
+      icon: 'md-menu',
+      title: '系统'
+    },
+    component: () => import('@/components/main/main'),
+    children: [
+      {
+        path: 'department',
+        name: '部门管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '部门管理'
+        },
+        component: DEPARTMENT
+      },
+      {
+        path: 'userManagement',
+        name: '用户管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '用户管理'
+        },
+        component: USERMANAGEMENT
       }
     ]
   }
