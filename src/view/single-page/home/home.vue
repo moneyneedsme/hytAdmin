@@ -6,6 +6,7 @@
 import dynamicRouters from '@/router/dynamicRouters';
 import { getMenuByRouter } from "../../../libs/util";
 import { mapGetters,mapMutations } from 'vuex'
+import {localRead} from "@/libs/util";
 export default {
 	name: 'home',
 	data () {
@@ -18,16 +19,15 @@ export default {
     ]),
 	},
 	mounted () {
-		// const routers = getMenuByRouter(dynamicRouters);
+		// const routersList = JSON.parse(localRead('dynamicRouters'));
 		// const originRouteNames = this.$router.options.routes.map(r => r.name)
 		// // 需要解决重复加入问题
-    // if (dynamicRouters && dynamicRouters.length && originRouteNames.indexOf(dynamicRouters[0].name) < 0) {
-		// 		this.$router.addRoutes(dynamicRouters)
-		// 		this.setRoutersList(dynamicRouters);
+    // if (routersList && routersList.length && routersList.indexOf(routersList[0].name) < 0) {
+		// 		this.$router.addRoutes(routersList)
 		// }
 		// // console.log(this.$store.getters.menuList)
-		// console.log(dynamicRouters)
-		// console.log(routers)
+		// // console.log(dynamicRouters)
+		// // console.log(routers)
 		// console.log(this.$router.options.routes)
 		// console.log(dynamicRouters)
 		// console.log(this.$store.getters.menuList)
