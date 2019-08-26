@@ -75,17 +75,17 @@ export const netWork = (URL, info) => {
 
 // 暴露接口方法---获取商户信息
 export const userManagement = ({
-         pageNum,
-         pageSize,
-         phone,
-         channelName,
-         status
-       }) => {
-         return baseURLAxios.post(`/user/queryUserListByCondition`, {
-           pageNum,
-           pageSize,
-           phone,
-           channelName,
-           status
-         })
-       }
+  pageNum,
+  pageSize,
+  phone,
+  channelName,
+  status
+}) => {
+  return baseURLAxios.post(`/user/queryUserListByCondition`, {
+    pageNum,
+    pageSize,
+    phone,
+    channelName,
+    status
+  })
+}

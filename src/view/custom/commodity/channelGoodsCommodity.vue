@@ -1,10 +1,8 @@
 <template>
-	<div class="goodsCommodity">
+	<div class="channelGoodsCommodity">
       <Coustom-tree></Coustom-tree>
       <div>
-        <Input v-model="numID"  placeholder="商品编号" clearable/>
         <Input v-model="name"  placeholder="商品名称" clearable/>
-        <Cascader :data="selectData" v-model="selectValue" @on-change="selectChange" v-if='selectData.length' ></Cascader>
         <Button @click='getPageDatas'>查询</Button>
         <Button  type="primary" @click='showNewlyAdded("xz")'>新增</Button>
         <Table border ref="selection" :columns="columns" :data="datas" height="700">
@@ -13,7 +11,7 @@
               <Button type="error" size="small" @click="modalDel=true;delID=row.id;delIndex=index">删除</Button>
           </template>
 					<template slot-scope="{ row}" slot="img">
-              <img :src="row.imageAddress" >
+              <img :src="row.imageAddress">
           </template>
 					<template slot-scope="{ row,index}" slot="status">
               <Button type="success" size="small" @click="enable(row.id,row.enable,index)" v-if='row.enable=="START"'>上架</Button>
@@ -35,32 +33,29 @@
         </div>
       </Modal>
       <!-- 新增弹框的模态框 -->
-      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增商品':'编辑商品'" :loading='addedLoadding' :mask-closable='false'>
+      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增渠道商商品':'编辑渠道商商品'" :loading='addedLoadding' :mask-closable='false'>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
-          <FormItem label="商品名称" prop="productName">
-            <Input v-model.trim="formValidate.productName" placeholder="请输入商品名称"></Input>
+          <FormItem label="商品" prop="productId">
+            <!-- <Input v-model.number.trim="formValidate.productId" placeholder="请输入商品" disabled></Input> -->
+            <div class="getOnModal" @click='getOnModal'>{{formValidate.productName}}</div>
           </FormItem>
-          <FormItem label="商品类型" prop="categoryId">
-            <Cascader :data="selectData" v-model="formValidate.categoryId" @on-change="selectChange" v-if='selectData.length' ></Cascader>
-            <!-- <Input v-model.trim="formValidate.categoryId" placeholder="Enter your name"></Input> -->
+          <FormItem label="商品进价" prop="buyPrice">
+            <Input v-model.trim="formValidate.buyPrice" placeholder="请输入商品进价"></Input>
           </FormItem>
-          <FormItem label="商品编码" prop="productCode">
-            <Input v-model.trim="formValidate.productCode" placeholder="请输入商品编码"></Input>
+          <FormItem label="商品售价" prop="salePrice">
+            <Input v-model.trim="formValidate.salePrice" placeholder="请输入商品售价"></Input>
           </FormItem>
-          <FormItem label="进价" prop="buyPrice">
-            <Input v-model.trim="formValidate.buyPrice" placeholder="请输入进价"></Input>
+          <FormItem label="渠道分类" prop="categorylId">
+            <!-- <Input v-model.trim="formValidate.categorylId" placeholder="请输入渠道分类id"></Input> -->
+            <Select v-model="formValidate.categorylId">
+                <Option v-for="item in channelList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
           </FormItem>
-          <FormItem label="进价上浮百分比" prop="buyPriceUpper">
-            <Input v-model.number.trim="formValidate.buyPriceUpper" placeholder="请输入进价上浮百分比" ></Input>
-          </FormItem>
-          <FormItem label="售价" prop="salePrice">
-            <Input v-model.trim="formValidate.salePrice" placeholder="请输入售价"></Input>
-          </FormItem>
-          <FormItem label="商品描述" prop="productDesc">
-            <Input v-model.trim="formValidate.productDesc" placeholder="请输入商品描述"></Input>
-          </FormItem>
-          <FormItem label="操作人姓名" prop="operatorName">
-            <Input v-model.trim="formValidate.operatorName" placeholder="请输入操作人姓名"></Input>
+          <!-- <FormItem label="渠道id" prop="channelId">
+            <Input v-model.trim="formValidate.channelId" placeholder="请输入渠道id"></Input>
+          </FormItem> -->
+          <FormItem label="备注" prop="remark">
+            <Input v-model.trim="formValidate.remark" placeholder="请输入备注"></Input>
           </FormItem>
           <FormItem label="状态" prop="enable">
             <RadioGroup v-model="formValidate.enable">
@@ -74,68 +69,72 @@
           <Button type="primary" size="large" @click="Added(formValidate)">确定</Button>
          </div>
       </Modal>
+      <goodsid-modal 
+        :showGoodsIDmodal='showGoodsIDmodal'
+        :GoodsIDdatas='GoodsIDdatas' 
+        :GoodsIdTotal='GoodsIdTotal' 
+        :GoodsIDPageSize='GoodsIDPageSize' 
+        :GoodsIDPageNum='GoodsIDPageNum'
+        @getGoodsIDPageDatas = 'getGoodsIDPageDatas'
+        @GoodsIDPageChange = 'GoodsIDPageChange'
+        @hideGoodsIdModal = 'hideGoodsIdModal'
+        @getGoodsId = 'getGoodsId'
+        ></goodsid-modal>
   </div>
 </template>
 <script>
 import CoustomTree from '../components/coustom-tree';
+import goodsidModal from '../components/goodsIDmodal';
 import {netWork} from '@/api/data'
 import { setTimeout } from 'timers';
 export default {
   components: {
-    CoustomTree
+    CoustomTree,
+    goodsidModal
   },
-  name: 'goodsCommodity',
+  name: 'channelGoodsCommodity',
   data () {
     return {
+      //渠道
+      channelList:[],
+      // 商品
+      GoodsIDdatas:[],
+      GoodsIdTotal:null,
+      GoodsIDPageSize:10,
+      GoodsIDPageNum:1,
+      showGoodsIDmodal:false,
       categoryIdValue:[],
       showNewlyType:'xz',
       addedLoadding:true,
       formValidate:{ //新增字段
-        productName: "", //商品名称
-        categoryId: [],//商品类型
-        productCode: "",//商品编码
-        buyPrice: "",//进价
-        buyPriceUpper: "",//进价上浮百分比
-        salePrice: "",//售价
-        productDesc:'',//商品描述
+        buyPrice:null, //商品进价
+        categorylId:null,//渠道分类id
+        productId:null,//商品id
+        salePrice: null,//商品售价
+        remark:null,//备注
         enable:'START',
-        operatorName: "",//操作人姓名
+        productName:null,
       },
       ruleValidate: {
-        productName: [
-          {
-            required: true,
-            message: "输入不能为空",
-            trigger: "blur",
-          }
-        ],
-        productCode: [
-          {
-            required: true,
-            message: "输入不能为空",
-            trigger: "blur",
-          }
-        ],
-        categoryId: [
-          {
-            required: true,
-          }
-        ],
         buyPrice: [
           {
             required: true,
             message: "输入不能为空",
             trigger: "blur",
-            // type:'number',
-            // max:100
           }
         ],
-        buyPriceUpper: [
+        categorylId: [
           {
             required: true,
             message: "输入不能为空",
             trigger: "blur",
-            type:'number',
+          }
+        ],
+        productId: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur",
           }
         ],
         salePrice: [
@@ -144,21 +143,7 @@ export default {
             message: "输入不能为空",
             trigger: "blur",
           }
-        ],
-        productDesc: [
-          {
-            required: true,
-            message: "输入不能为空",
-            trigger: "blur"
-          }
-        ],
-        operatorName: [
-          {
-            required: true,
-            message: "输入不能为空",
-            trigger: "blur"
-          }
-        ],
+        ]
       },
       newlyAdded:false,//新增按钮的弹框
       modal_loading:false,//删除的loading
@@ -166,21 +151,12 @@ export default {
       delIndex:null,//删除的索引
       categoryId:null,//下拉框查询id
       modalDel:false,
-      numID:'',
       name: '',
-			selectValue:[],
-      selectData:[],
       pageNum:1,
       total:null,
       pageSize:15,
 			datas: [],
       columns: [
-				{
-          title: '商品编号',
-          key: 'productCode',
-          align: 'center',
-          tooltip:true
-        },
         {
           title: '商品名称',
           key: 'productName',
@@ -189,21 +165,27 @@ export default {
           tooltip:true
         },
         {
-          title: '商品类型',
+          title: '渠道分类名称',
           key: 'categoryName',
           align: 'center',
           minWidth:60,
           tooltip:true
         },
         {
-          title: '进价',
+          title: '商品进价',
           key: 'buyPrice',
           align: 'center',
           tooltip:true
         },
         {
-          title: '售价',
+          title: '商品售价',
           key: 'salePrice',
+          align: 'center',
+          tooltip:true
+        },
+        {
+          title: '会员价',
+          key: 'memberPrice',
           align: 'center',
           tooltip:true
         },
@@ -242,71 +224,86 @@ export default {
       ]
     }
   },
-  // watch:{
-  //   'formValidate.buyPriceUpper':{
-  //     handler(newName, oldName) {
-  //       if(newName>100){
-  //         this.$set(this.formValidate,'buyPriceUpper',100+'%')
-  //       }else if(newName<0){
-  //         this.$set(this.formValidate,'buyPriceUpper',0+'%')
-  //       }else{
-  //         // this.$set(this.formValidate,'buyPriceUpper',newName+'%')
-  //       }
-  //     },
-  //     immediate: true,
-  //     deep: true
-  //   }
-  // },
   methods: {
-    show (index) {
-      console.log(index%2)
+    getGoodsId(row){ //点击一行传过来的id
+      console.log(row)
+      this.formValidate.productId = row.id;
+      this.formValidate.productName = row.productName
+      this.formValidate.buyPrice = row.buyPrice
+      this.formValidate.salePrice = row.salePrice
+    },
+    hideGoodsIdModal(){  //隐藏点击商品的弹框
+      this.showGoodsIDmodal =false;
+    },
+    getOnModal(){
+      this.showGoodsIDmodal=true
+    },
+    GoodsIDPageChange(value){
+      this.GoodsIDPageNum = value;
+      this.getGoodsIDPageDatas();
+    },
+    //点击新增商品 事件
+    getGoodsIDPageDatas(value){
+      console.log(value)
+      let data = {
+        // productCode:this.GoodsIdnum,
+        enable:'START',
+        productName:value,
+        pageNum:this.GoodsIDPageNum,
+        pageSize:this.GoodsIDPageSize
+      }
+      netWork('/product/findProductPage',data).then(res=>{
+        if(res.data.code===200){
+          this.GoodsIDPageNum = res.data.result.pageNum;
+          this.GoodsIdTotal = res.data.result.total;
+          this.GoodsIDdatas = res.data.result.list;
+        }else if(res.data.code===500){
+          this.$Message.error(res.data.message);
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
     },
     showNewlyAdded(type,index){
       this.showNewlyType = type;
       //初始化数据
-      this.formValidate = { //新增字段  
-        productName: "", //商品名称
-        categoryId: [],//商品类型
-        productCode: "",//商品编码
-        buyPrice: "",//进价
-        buyPriceUpper: "",//进价上浮百分比
-        salePrice: "",//售价
-        productDesc:'',//商品描述
+      this.formValidate = { //新增字段
+        buyPrice:null, //商品进价
+        categorylId:null,//渠道分类id
+        productId:null,//商品id
+        salePrice: null,//商品售价
+        remark:null,//备注
         enable:'START',
-        operatorName: "",//操作人姓名
       }
       this.categoryIdValue = [];
       if(type=='bj'){
         this.formValidate = this.datas[index];
-        let ary = this.datas[index].categoryIds.split(",")
-        ary =ary.map(item=>{
-          return parseInt(item)
-        })
-        this.formValidate.categoryId = [...this.categoryIdValue,...ary,this.datas[index].categoryId]
+        // let ary = this.datas[index].categoryIds.split(",")
+        // ary =ary.map(item=>{
+        //   return parseInt(item)
+        // })
+        // this.formValidate.categoryId = [...this.categoryIdValue,...ary,this.datas[index].categoryId]
         // this.formValidate.categoryId = [ 41, 43, 44 ]
         console.log(this.formValidate.categoryId)
       }
       this.newlyAdded=true
     },
     Added(value){
-      if(value.buyPrice&&value.buyPriceUpper&&value.categoryId.length>0&&value.operatorName&&value.productCode&&value.productDesc&&value.productName&&value.salePrice){
-          let  { buyPrice ,buyPriceUpper,categoryId,operatorName,productCode,productDesc,enable,productName,salePrice} =  value;
+      if(value.buyPrice&&value.categorylId&&value.productId&&value.salePrice){
+          let  { buyPrice ,categorylId,productId,salePrice,remark,enable} =  value;
           if(this.showNewlyType=='xz'){
             let data = {
               buyPrice,
-              buyPriceUpper,
-              categoryId:categoryId[categoryId.length-1],
-              operatorName,
-              productCode,
-              productDesc,
+              categorylId,
+              productId,
+              salePrice,
+              remark,
               enable,
-              productName,
-              salePrice
             }
-            netWork('/product/productSave',data).then(res=>{
+            netWork('/productChannel/productChannelSave',data).then(res=>{
               if(res.data.code===200){
                 if(res.data.result){
-                  this.categoryId = null; //清除掉 筛选id
+                  // this.categoryId = null; //清除掉 筛选id
                   this.getPageDatas();//刷新页面
                   this.addedLoadding = false;
                   this.newlyAdded = false;
@@ -325,17 +322,14 @@ export default {
           }else if(this.showNewlyType=='bj'){
             let data = {
               buyPrice,
-              buyPriceUpper,
-              categoryId:categoryId[categoryId.length-1],
-              operatorName,
-              productCode,
-              productDesc,
-              enable,
-              productName,
+              categorylId,
+              productId,
               salePrice,
+              remark,
+              enable,
               id:value.id
             }
-            netWork('/product/productModified',data).then(res=>{
+            netWork('/productChannel/productChannelModified',data).then(res=>{
               if(res.data.code===200){
                 if(res.data.result){
                   this.categoryId = null; //清除掉 筛选id
@@ -361,12 +355,9 @@ export default {
 
         }
     },
-    selectChange(value){
-      this.categoryId = value[value.length-1];
-    },
     del(){
       this.modal_loading = true;
-      let url = '/product/productDelete?id='+this.delID
+      let url = '/productChannel/productChannelDelete?id='+this.delID
       netWork(url).then(res=>{
         if(res.data.code===200){
           this.modal_loading = false;
@@ -394,7 +385,7 @@ export default {
         id,
         enable:value
       }
-      netWork('/product/productModified',data).then(res=>{
+      netWork('/productChannel/productChannelModified',data).then(res=>{
         if(res.data.code===200){
           if(res.data.result){
             console.log(this.datas[index].enable)
@@ -418,13 +409,11 @@ export default {
     },
     getPageDatas(){
       let data = {
-        productCode:this.numID,
         productName:this.name,
-        categoryId:this.categoryId,
         pageNum:this.pageNum,
         pageSize:this.pageSize
       }
-      netWork('/product/findProductPage',data).then(res=>{
+      netWork('/productChannel/findProductChannelPage',data).then(res=>{
         if(res.data.code===200){
           this.pageNum = res.data.result.pageNum;
           this.total = res.data.result.total;
@@ -436,30 +425,35 @@ export default {
         console.log(err)
       })
     },
-    getSelectData(){
-      netWork('/category/findCategoryTree').then(res=>{
-        // console.log(res.data)
+    // 查询所有渠道商商品类型
+    getChannelList(){
+      netWork('/categoryChannel/findAllCategoryChannel',{}).then(res=>{
         if(res.data.code===200){
-          this.selectData = res.data.result;
-          console.log(res.data.result)
+          let data = [];
+          for(let i=0,len=res.data.result.length;i<len;i++){
+            data[i] = {};
+            data[i].value = res.data.result[i].id;
+            data[i].label = res.data.result[i].categoryName;
+          }
+          this.channelList = data;
         }else if(res.data.code===500){
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
         console.log(err)
       })
-    },
+    }
   },
   mounted () {
-    this.getSelectData();
     this.getPageDatas();
+    this.getGoodsIDPageDatas();
+    this.getChannelList();
   }
-}
+} 
 </script>
 
 <style lang="less" scoped>
-  .goodsCommodity{
-    
+  .channelGoodsCommodity{
     .ivu-input-wrapper,.ivu-cascader {
       width: 180px;
       margin-right:5px;
@@ -487,6 +481,32 @@ export default {
       width: 33px;
       height: 33px;
     }
+    
   }
-  
+  .getOnModal{
+    display: inline-block;
+    width: 100%;
+    height: 32px;
+    line-height: 1.5;
+    padding: 4px 7px;
+    font-size: 12px;
+    border: 1px solid #dcdee2;
+    border-radius: 4px;
+    color: #515a6e;
+    background-color: #fff;
+    background-image: none;
+    position: relative;
+    cursor:pointer;
+  }
+  div.GoodsIdname{
+    width: 180px;
+    margin-right:5px;
+  }
+  div.goodsIDTable{
+    margin-top: 10px;
+  }
+  .modalPage{
+    text-align: center;
+    margin-top: 10px;
+  }
 </style>

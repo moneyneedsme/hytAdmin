@@ -3,7 +3,9 @@ import HOME from '@/view/single-page/home/home';
 import INFO from '@/view/custom/merchant/info';
 import ACCOUNT from '@/view/custom/merchant/account';
 import GOODSCOMMODITY from '@/view/custom/commodity/goodsCommodity';
+import CHANNElGOODSCOMMODITY from '@/view/custom/commodity/channelGoodsCommodity';
 import COMMODITYTYPES from '@/view/custom/commodity/commodityTypes';
+import CHANNElCOMMODITYTYPES from '@/view/custom/commodity/channelCommodityTypes';
 import DEVICEMANAGEMENT from '@/view/custom/equipment/deviceManagement';
 import TROUBLESHOOTING from '@/view/custom/equipment/troubleshooting';
 import GIS from '@/view/custom/equipment/GIS';
@@ -141,7 +143,7 @@ const router2 = [
     component: () => import('@/components/main/main'),
     children: [
       {
-        path: 'goodsCommodity',
+        path: '/commodity/goodsCommodity',
         name: 'goodsCommodity',
         meta: {
           icon: 'md-funnel',
@@ -150,13 +152,30 @@ const router2 = [
         component: GOODSCOMMODITY
       },
       {
-        path: 'commodityTypes',
+        path: '/commodity/commodityTypes',
         name: 'commodityTypes',
         meta: {
           icon: 'md-funnel',
           title: '商品类型'
         },
         component: COMMODITYTYPES
+      },
+      {
+        path: '/commodity/channelGoodsCommodity',
+        name: 'channelGoodsCommodity',
+        meta: {
+          icon: 'md-funnel',
+          title: '渠道商商品管理'
+        },
+        component: CHANNElGOODSCOMMODITY
+      },{
+        path: '/commodity/channelCommodityTypes',
+        name: 'channelCommodityTypes',
+        meta: {
+          icon: 'md-funnel',
+          title: '渠道商商品类型'
+        },
+        component: CHANNElCOMMODITYTYPES
       }
     ]
   },

@@ -26,7 +26,7 @@
 </template>
 <script>
 import CoustomTree from "../components/coustom-tree";
-import {getMerchantInfo} from "../../../api/data";
+// import {getMerchantInfo} from "../../../api/data";
 export default {
   components: {
     CoustomTree
@@ -128,17 +128,17 @@ export default {
     },
 
     // 获取商户信息
-    searchMerchantInfo(){
-      getMerchantInfo(1).then(backData=>{
-        console.log(backData);
-        if(backData.data.code==200){
-          this.dataOne= backData.data.result
-        }
-        else{
-          this.$Message.error(backData.data.message);
-        } 
-      })
-    }
+    // searchMerchantInfo(){
+    //   getMerchantInfo(1).then(backData=>{
+    //     console.log(backData);
+    //     if(backData.data.code==200){
+    //       this.dataOne= backData.data.result
+    //     }
+    //     else{
+    //       this.$Message.error(backData.data.message);
+    //     } 
+    //   })
+    // }
   },
   mounted() {
     
@@ -154,7 +154,7 @@ export default {
     //   dueDate: "2020-8-17"
     // };
     // this.dataTable = Array(20).fill(data);
-    this.searchMerchantInfo()
+    // this.searchMerchantInfo()
     this.dataTable = Array(20).fill(this.dataOne);
 
   }
