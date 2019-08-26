@@ -26,7 +26,7 @@
 
       <!-- 积分明细弹出框 -->
       <Modal v-model="modal1" width="600" title="积分明细" @on-ok="ok" @on-cancel="cancel">
-        <Table height="300"  border :columns="columns1" :data="data1"></Table>
+        <Table height="300"  border :columns="columns1" :data="data1" ></Table>
       </Modal>
     </div>
   </div>
@@ -100,23 +100,28 @@ export default {
       columns1: [
         {
           title: "交易时间",
-          key: "name"
+          key: "name",
+          minWidth: 120
         },
         {
           title: "交易机型",
-          key: "age"
+          key: "age",
+          minWidth: 100
         },
         {
           title: "设备编号",
-          key: "address"
+          key: "address",
+          minWidth: 120
         },
         {
           title: "交易金额",
-          key: "address"
+          key: "address",
+          minWidth: 100
         },
         {
           title: "获取积分数",
-          key: "address"
+          key: "address",
+          minWidth: 100,
         }
         
       ],
@@ -197,7 +202,8 @@ export default {
           name: "Jon Snow",
           age: 26,
           address: "Ottawa No. 2 Lake Park",
-          date: "2016-10-04"
+          date: "2016-10-04",
+          maxWidth: 60
         }
       ]
     };
