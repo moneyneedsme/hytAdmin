@@ -75,22 +75,6 @@ export const netWork = (URL, info) => {
 
 // 暴露接口方法---获取用户信息
 export const userManagement = ({
-<<<<<<< HEAD
-  pageNum,
-  pageSize,
-  phone,
-  channelName,
-  status
-}) => {
-  return baseURLAxios.post(`/user/queryUserListByCondition`, {
-    pageNum,
-    pageSize,
-    phone,
-    channelName,
-    status
-  })
-}
-=======
   channelId,
   pageNum,
   pageSize,
@@ -194,5 +178,3 @@ export const editUser = ({
 //     }
 //   })
 // }
-
->>>>>>> 093e1756b6b258681a225fdb09663dbb3f05545e
