@@ -13,7 +13,7 @@
       <Button type="primary" icon="ios-share-alt" @click="exportData">导出</Button>
       <Table :columns="columns11" :data="dataTable" border height="700" ref="table">
         <!-- 操作 -->
-        <template slot-scope="scope" slot="edit">
+        <template slot-scope="scope" slot="operation">
           <!-- 编辑按钮 -->
           <Button
             type="primary"
@@ -50,7 +50,7 @@
           <div v-if="row.type==2">管理员</div>
         </template>
       </Table>
-      <Page :total="100" show-elevator />
+      <Page :total="1000" @on-change="handleCurrentChange" :current="pageNum" show-elevator />
     </div>
 
     <!-- 新增弹框的模态框 -->
@@ -167,7 +167,7 @@ export default {
   components: {
     CoustomTree
   },
-  name: "info",
+  name: "userManagement",
 
   data() {
     return {
@@ -194,7 +194,7 @@ export default {
       },
       // 编辑模态框表单数据
       editForm: {
-        birth: "", //出生日期channelId: "", //渠道id
+        birth: "", //出生日期channelId: "",
         deptId: "", //部门id
         email: "", //电子邮件
         id: "", //主键id
@@ -271,7 +271,7 @@ export default {
         {
           title: "操作",
           align: "center",
-          slot: "edit",
+          slot: "operation",
           maxWidth: 120,
           tooltip: true
         }
@@ -291,6 +291,15 @@ export default {
     show(row) {
       alert(row);
     },
+
+    // 页码改变时触发
+    handleCurrentChange(current) {
+      // console.log(current);
+      this.pageNum = current;
+      // 重新获取数据
+      this.getuserManagement();
+    },
+
 
     // 新增模态框的确认点击事件
     getadduser(name) {

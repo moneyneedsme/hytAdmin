@@ -2,10 +2,11 @@
   <div>
     <Coustom-tree></Coustom-tree>
     <div>
-      <Input v-model="deptName" placeholder="部门名称" @keyup.enter.native="getdepartment" clearable />
-      <Button @click="getdepartment">查询</Button>
+      <Input v-model="roleName" placeholder="角色名称" @keyup.enter.native="getRole" clearable />
+      <Button @click="getRole">查询</Button>
       <Button type="primary" icon="md-add-circle" @click="addFormVisible = true">新增</Button>
-      <Table :columns="columns" :data="dataTable" row-key border height="700" ref="table">
+      <Button type="primary" icon="ios-share-alt" @click="exportData">导出</Button>
+      <Table :columns="columns" :data="dataTable" border height="700" ref="table">
         <!-- 操作 -->
         <template slot-scope="scope" slot="operation">
           <!-- 编辑按钮 -->
@@ -19,6 +20,30 @@
           <!-- 删除按钮 -->
           <Button type="error" size="small" icon="ios-trash" @click="delOne(scope.row)"></Button>
         </template>
+
+        <!-- 状态按钮 -->
+        <template slot="status" slot-scope="{ row, index }">
+          <Button
+            type="success"
+            v-if="row.status==1"
+            size="small"
+            style="margin-right: 5px"
+            @click="show(index)"
+          >正常</Button>
+          <Button
+            type="error"
+            v-if="row.status==2"
+            size="small"
+            style="margin-right: 5px"
+            @click="show(index)"
+          >锁定</Button>
+        </template>
+
+        <!-- 用户类型按钮 -->
+        <template slot="type" slot-scope="{ row, index }">
+          <div v-if="row.type==1">普通用户</div>
+          <div v-if="row.type==2">管理员</div>
+        </template>
       </Table>
       <Page :total="1000" @on-change="handleCurrentChange" :current="pageNum" show-elevator />
     </div>
@@ -26,93 +51,88 @@
     <!-- 新增弹框的模态框 -->
     <Modal
       v-model="addFormVisible"
-      title="新增【部门】"
-      @on-ok="getadddepartment('formValidate')"
+      title="新增【用户】"
+      @on-ok="getadduser('formValidate')"
       @on-cancel="cancel"
     >
-      <Form ref="formValidate" :model="formValidate" :label-width="120">
-        <FormItem label="部门名称" prop="deptName">
-          <Input v-model="formValidate.deptName" placeholder="部门名称"></Input>
+      <Form ref="formValidate" inline :model="formValidate" :label-width="120">
+        <FormItem label="角色名称" prop="roleName">
+          <Input v-model="formValidate.roleName" placeholder="角色名称"></Input>
         </FormItem>
-        <FormItem label="渠道id" prop="channelId ">
-          <Input v-model="formValidate.channelId " placeholder="渠道id"></Input>
+        <FormItem label="角色" prop="role">
+          <Input v-model="formValidate.role" placeholder="role格式请以ROLE_开头"></Input>
         </FormItem>
-        <FormItem label="排序号" prop="sort">
-          <Input v-model="formValidate.sort" placeholder="排序号"></Input>
+        <FormItem label="渠道id" prop="channelId">
+          <Input v-model="formValidate.channelId" placeholder="渠道id"></Input>
         </FormItem>
       </Form>
     </Modal>
 
     <!-- 编辑弹框的模态框 -->
-    <Modal v-model="editFormVisible" title="编辑【部门】" @on-ok="saveEdit" @on-cancel="cancel">
-      <Form ref="formValidate" :model="editForm" :label-width="120">
-        <FormItem label="部门名称" prop="deptName">
-          <Input v-model="editForm.deptName" placeholder="部门名称"></Input>
+    <Modal v-model="editFormVisible" title="编辑【角色】" @on-ok="saveEdit" @on-cancel="cancel">
+      <Form ref="formValidate" inline :model="editForm" :label-width="120">
+        <FormItem label="角色名称" prop="roleName">
+          <Input v-model="editForm.roleName" placeholder="角色名称"></Input>
         </FormItem>
-        <FormItem label="渠道id" prop="channelId ">
-          <Input v-model="editForm.channelId " placeholder="渠道id"></Input>
+        <FormItem label="角色" prop="role">
+          <Input v-model="editForm.role" placeholder="role格式请以ROLE_开头"></Input>
         </FormItem>
-        <FormItem label="排序号" prop="sort">
-          <Input v-model="editForm.sort" placeholder="排序号"></Input>
+        <FormItem label="渠道id" prop="channelId">
+          <Input v-model="editForm.channelId" placeholder="渠道id"></Input>
         </FormItem>
       </Form>
     </Modal>
   </div>
 </template>
-
 <script>
 import CoustomTree from "../components/coustom-tree";
-import {
-  department,
-  addDepartment,
-  delDepartment,
-  editDepartment
-} from "../../../api/data";
+import { role, addRole, delRole, editRole } from "../../../api/data";
 export default {
   components: {
     CoustomTree
   },
-  name: "department",
+  name: "role",
+
   data() {
     return {
       editFormVisible: false, //编辑模态框显示方式
       delFormVisible: false, //删除模态框显示方式
       addFormVisible: false, //新增模态框显示方式
-      //编辑模态框表单数据
-      editForm: {
-        channelId: "", //渠道id
-        deptName: "", //部门名称
-        id: "", //主键id
-        operator: "", //操作人
-        pid: "", //父ID
-        pids: "", //父IDS
-        remark: "", //备注
-        sort: "" //排序
-      },
       //新增模态框表单数据
       formValidate: {
         channelId: "", //渠道id
-        deptName: "", //部门名称
+        createDate: "", //创建时间
         operator: "", //操作人
-        pid: "", //父ID
-        pids: "", //父IDS
         remark: "", //备注
-        sort: "" //排序
+        role: "", //角色
+        roleName: "", //角色名称
+        updateDate: "" //修改时间
       },
-      channelId: Number, //渠道ID
-      deptName: "", //部门名称
+      // 新增模态框表格规则
+      ruleValidate: {
+        role: [
+          {
+            required: true,
+            message: "role格式必须以ROLE_开头",
+            trigger: "blur"
+          }
+        ]
+      },
+      // 编辑模态框表单数据
+      editForm: {
+        channelId: "", //渠道id
+        id: "", //主键id
+        operator: "", //操作人
+        remark: "", //备注
+        role: "", //角色
+        roleName: "", //角色名称
+      },
+      channelId: 1, //渠道ID
       pageNum: 1, // 页码
       pageSize: 10, // 页容量
+      roleName: "", //角色名称
       // 数据结构
       columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center",
-          function(selection, row) {
-            console.log(selection, row);
-          }
-        },
         {
           title: "#",
           align: "center",
@@ -121,21 +141,21 @@ export default {
           tooltip: true
         },
         {
-          title: "部门名称",
-          key: "deptName",
+          title: "角色名称",
+          key: "roleName",
           align: "center",
           // maxWidth: 100,
           tooltip: true
         },
         {
-          title: "上级部门",
-          key: "parentDeptName",
+          title: "角色",
+          key: "role",
           align: "center",
           // maxWidth: 100,
           tooltip: true
         },
         {
-          title: "排序号",
+          title: "所属部门",
           key: "channelId",
           align: "center",
           // maxWidth: 100,
@@ -144,6 +164,20 @@ export default {
         {
           title: "备注",
           key: "remark",
+          align: "center",
+          // maxWidth: 100,
+          tooltip: true
+        },
+        {
+          title: "创建时间",
+          key: "createDate",
+          align: "center",
+          // maxWidth: 100,
+          tooltip: true
+        },
+        {
+          title: "更新时间",
+          key: "updateDate",
           align: "center",
           // maxWidth: 100,
           tooltip: true
@@ -161,39 +195,46 @@ export default {
     };
   },
   methods: {
+    // 导出表格方法
+    exportData(type) {
+      this.$refs.table.exportCsv({
+        filename: "用户明细"
+      });
+    },
+
     show(row) {
       alert(row);
     },
+
     // 页码改变时触发
     handleCurrentChange(current) {
       // console.log(current);
       this.pageNum = current;
       // 重新获取数据
-      this.getdepartment();
+      this.getRole();
     },
 
     // 新增模态框的确认点击事件
-    getadddepartment(name) {
+    getadduser(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           //对的
-          addDepartment(this.formValidate).then(backData => {
-            console.log(this.formValidate);
+          addRole(this.formValidate).then(backData => {
             console.log(backData);
             if (backData.data.code == 200) {
               // 关闭弹框
               this.addFormVisible = false;
               // 重新获取数据
-              this.getdepartment();
+              this.getRole();
               this.$Message.info("新增成功");
               this.formValidate = {
                 channelId: "", //渠道id
-                deptName: "", //部门名称
+                createDate: "", //创建时间
                 operator: "", //操作人
-                pid: "", //父ID
-                pids: "", //父IDS
                 remark: "", //备注
-                sort: "" //排序
+                role: "", //角色
+                roleName: "", //角色名称
+                updateDate: "" //修改时间
               };
             }
           });
@@ -212,10 +253,10 @@ export default {
         title: "此操作将永久删除该用户, 是否继续?",
         // 点击了确定
         onOk: () => {
-          delDepartment({ id: row.id }).then(backData => {
+          delRole({ roleId: row.id }).then(backData => {
             console.log(backData);
             if (backData.data.code == 200) {
-              this.getdepartment();
+              this.getRole();
               this.$Message.info("删除成功");
             }
           });
@@ -227,7 +268,7 @@ export default {
       });
     },
 
-    // // 编辑按钮操作
+    // 编辑按钮操作
     enterEdit(row) {
       // 弹框
       this.editFormVisible = true;
@@ -237,12 +278,12 @@ export default {
 
     // 提交编辑
     saveEdit() {
-      editDepartment(this.editForm).then(backData => {
-        console.log(backData);
+      editRole(this.editForm).then(backData => {
+        // console.log(backData);
         if (backData.data.code == 200) {
           this.$Message.info("修改成功");
           this.editFormVisible = false;
-          this.getdepartment();
+          this.getRole();
         }
       });
     },
@@ -251,28 +292,25 @@ export default {
       this.$Message.info("取消新增");
     },
 
-    // 获取部门信息
-    getdepartment() {
-      department({
+    // 获取用户信息
+    getRole() {
+      role({
+        channelId: this.channelId,
         pageNum: this.pageNum,
         pageSize: this.pageSize,
-        deptName: this.deptName,
-        channelId: this.channelId
+        roleName: this.roleName
       }).then(backData => {
         console.log(backData);
-        if (backData.data.code == 200) {
-          this.dataTable = backData.data.result.list;
-        }
+        this.dataTable = backData.data.result.list;
       });
     }
   },
 
   mounted() {
-    this.getdepartment();
+    this.getRole();
   }
 };
 </script>
-
 <style lang="less" scoped>
 .ivu-input-wrapper {
   width: 150px;
