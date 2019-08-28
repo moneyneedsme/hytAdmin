@@ -1,5 +1,5 @@
 <template>
-	<div class='commodityTypes'>
+	<div class='commodityPrice'>
       <Coustom-tree></Coustom-tree>
       <div>
         <Input v-model="name"  placeholder="分类名称" clearable/>
@@ -10,71 +10,12 @@
         <Button  type="primary" @click='showNewlyAdded("xz")'>新增</Button>
 				<!-- <Button  type="primary">删除</Button>
 				<Button  type="primary">导出</Button> -->
-        <!-- <Table border ref="selection" :columns="columns" :data="datas" height="700">
+        <Table border ref="selection" :columns="columns" :data="datas" height="700">
           <template slot-scope="{ row, index }"    slot="edit">
               <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>编辑</Button>
               <Button type="error" size="small" @click="modalDel=true;delID=row.id;delIndex=index">删除</Button>
           </template>
-        </Table> -->
-        <el-table
-          :data="datas"
-          style="width:auto;marginTop:10px"
-          height="700"
-          :row-key="getRowKeys"
-          border
-          default-expand-all
-          :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-          empty-text="暂无数据"
-          :header-cell-style="{background:'#f8f8f9'}"
-          >
-          <el-table-column
-            prop="categoryName"
-            label="分类名称"
-            width="200"
-            align='center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="categoryType"
-            label="分类类型"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="operatorName"
-            label="操作人姓名"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="remark"
-            label="备注"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="createDate"
-            label="创建时间"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="updateDate"
-            label="修改时间"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="edit"
-            label="操作"
-            align= 'center'
-            >
-            <template slot-scope="scope">
-              <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",scope.$index)'>编辑</Button>
-              <Button type="error" size="small" @click="modalDel=true;delID=scope.row.id;delIndex=scope.$index">删除</Button>
-            </template>
-          </el-table-column>
-        </el-table>
+        </Table>
         <Page :total="total" show-elevator :current='pageNum' @on-change='pageChange' :page-size='pageSize'/>
       </div>
       <!-- 删除 -->
@@ -123,7 +64,7 @@ export default {
   components: {
     CoustomTree
   },
-  name: 'commodityTypes',
+  name: 'commodityPrice',
   data () {
     return {
       conditionValue:null,
@@ -220,12 +161,11 @@ export default {
       let url = '/category/categoryDelete?id='+this.delID
       netWork(url).then(res=>{
         if(res.data.code===200){
-          this.getPageDatas();
           this.modal_loading = false;
           this.modalDel = false;
-          // this.datas.splice(this.delIndex,1);
+          this.datas.splice(this.delIndex,1);
           this.delID = null;//删除的ID
-          // this.delIndex =null;//删除的索引
+          this.delIndex =null;//删除的索引
           this.$Message.success('删除成功');
         }else if(res.data.code===500){
           this.modal_loading = false;
@@ -366,7 +306,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .commodityTypes{
+  .commodityPrice{
     .ivu-input-wrapper{
       width: 200px;
       margin-right:5px;

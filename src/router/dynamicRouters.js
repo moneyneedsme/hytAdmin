@@ -3,12 +3,22 @@ import HOME from '@/view/single-page/home/home';
 import INFO from '@/view/custom/merchant/info';
 import ACCOUNT from '@/view/custom/merchant/account';
 import GOODSCOMMODITY from '@/view/custom/commodity/goodsCommodity';
+import CHANNElGOODSCOMMODITY from '@/view/custom/commodity/channelGoodsCommodity';
 import COMMODITYTYPES from '@/view/custom/commodity/commodityTypes';
+import CHANNElCOMMODITYTYPES from '@/view/custom/commodity/channelCommodityTypes';
+import COMMODITYPRICE from '@/view/custom/commodity/commodityPrice';
 import DEVICEMANAGEMENT from '@/view/custom/equipment/deviceManagement';
 import TROUBLESHOOTING from '@/view/custom/equipment/troubleshooting';
 import GIS from '@/view/custom/equipment/GIS';
 import SUBAREALINE from '@/view/custom/equipment/subareaLine';
 import GOODWAYGOODS from '@/view/custom/equipment/goodwayGoods';
+import CLIENTMANAGEMENT from '@/view/custom/client/clientManagement';
+import INTEGRAL from '@/view/custom/client/integral';
+import STOCKCONTROL from '@/view/custom/stock/stockControl';
+import STOCKADD from '@/view/custom/stock/stockAdd';
+import DEPARTMENT from '@/view/custom/system/department'
+import USERMANAGEMENT from '@/view/custom/system/userManagement';
+import ROLE from '@/view/custom/system/role'
 
 export default [
 	{
@@ -34,118 +44,245 @@ export default [
       }
     ]
   },
-	{
-		path: '/merchant',
-		name: 'merchant',
-		meta: {
-			icon: 'md-menu',
-			title: '商户'
-		},
-		component: ()=> import('@/components/main/main'),
-		children: [
-			{
-				path: 'Information',
-				name: 'Information',
-				meta: {
-					icon: 'md-funnel',
-					title: '商户信息'
-				},
-				component: INFO
-			},
-			{
-				path: 'account',
-				name: 'account',
-				meta: {
-					icon: 'md-funnel',
-					title: '商户账号'
-				},
-				component: ACCOUNT
-			},
-		]
-	},
-	{
-		path: '/commodity',
-		name: 'commodity',
-		meta: {
-			icon: 'md-menu',
-			title: '商品'
-		},
-		component:()=> import('@/components/main/main'),
-		children: [
-			{
-				path: 'goodsCommodity',
-				name: 'goodsCommodity',
-				meta: {
-					icon: 'md-funnel',
-					title: '商品管理'
-				},
-				component: GOODSCOMMODITY
-			},
-			{
-				path: 'commodityTypes',
-				name: 'commodityTypes',
-				meta: {
-					icon: 'md-funnel',
-					title: '商品类型'
-				},
-				component: COMMODITYTYPES
-			}
-		]
-	},
-	{
-		path: '/equipment',
-		name: 'equipment',
-		meta: {
-			icon: 'md-menu',
-			title: '设备'
-		},
-		component: ()=> import('@/components/main/main'),
-		children: [
-			{
-				path: '/equipment/deviceManagement',
-				name: 'deviceManagement',
-				meta: {
-					icon: 'md-funnel',
-					title: '设备管理'
-				},
-				component: DEVICEMANAGEMENT
-			},
-			{
-				path: '/equipment/troubleshooting',
-				name: 'troubleshooting',
-				meta: {
-					icon: 'md-funnel',
-					title: '故障报修'
-				},
-				component: TROUBLESHOOTING
-			},
-			{
-				path: '/equipment/GIS',
-				name: 'GIS',
-				meta: {
-					icon: 'md-funnel',
-					title: 'GIS'
-				},
-				component: GIS
-			},
-			{
-				path: '/equipment/subareaLine',
-				name: 'subareaLine',
-				meta: {
-					icon: 'md-funnel',
-					title: '分区线路'
-				},
-				component: SUBAREALINE
-			},
-			{
-				path: '/equipment/goodwayGoods',
-				name: 'goodwayGoods',
-				meta: {
-					icon: 'md-funnel',
-					title: '货道商品'
-				},
-				component: GOODWAYGOODS
-			}
-		]
-	},
+  {
+    path: '/merchant',
+    name: 'merchant',
+    meta: {
+      icon: 'md-menu',
+      title: '商户'
+    },
+    component: () => import('@/components/main/main'),
+    children: [
+      {
+        path: '/merchant/Information',
+        name: 'Information',
+        meta: {
+          icon: 'md-funnel',
+          title: '商户信息'
+        },
+        component: INFO
+      },
+      {
+        path: '/merchant/account',
+        name: 'account',
+        meta: {
+          icon: 'md-funnel',
+          title: '商户账号'
+        },
+        component: ACCOUNT
+      }
+    ]
+  },
+  {
+    path: '/commodity',
+    name: 'commodity',
+    meta: {
+      icon: 'md-menu',
+      title: '商品'
+    },
+    component: () => import('@/components/main/main'),
+    children: [
+      {
+        path: '/commodity/commodityPrice',
+        name: 'commodityPrice',
+        meta: {
+          icon: 'md-funnel',
+          title: '商品价格模版'
+        },
+        component: COMMODITYPRICE
+      },
+      {
+        path: '/commodity/commodityTypes',
+        name: 'commodityTypes',
+        meta: {
+          icon: 'md-funnel',
+          title: '基础商品类型'
+        },
+        component: COMMODITYTYPES
+      },
+      {
+        path: '/commodity/goodsCommodity',
+        name: 'goodsCommodity',
+        meta: {
+          icon: 'md-funnel',
+          title: '基础商品'
+        },
+        component: GOODSCOMMODITY
+      },
+      {
+        path: '/commodity/channelCommodityTypes',
+        name: 'channelCommodityTypes',
+        meta: {
+          icon: 'md-funnel',
+          title: '渠道商商品分类'
+        },
+        component: CHANNElCOMMODITYTYPES
+      },
+      {
+        path: '/commodity/channelGoodsCommodity',
+        name: 'channelGoodsCommodity',
+        meta: {
+          icon: 'md-funnel',
+          title: '渠道商商品'
+        },
+        component: CHANNElGOODSCOMMODITY
+      }
+    ]
+  },
+  {
+    path: '/equipment',
+    name: 'equipment',
+    meta: {
+      icon: 'md-menu',
+      title: '设备'
+    },
+    component: () => import('@/components/main/main'),
+    children: [
+      {
+        path: '/equipment/deviceManagement',
+        name: 'deviceManagement',
+        meta: {
+          icon: 'md-funnel',
+          title: '设备管理'
+        },
+        component: DEVICEMANAGEMENT
+      },
+      {
+        path: '/equipment/troubleshooting',
+        name: 'troubleshooting',
+        meta: {
+          icon: 'md-funnel',
+          title: '故障报修'
+        },
+        component: TROUBLESHOOTING
+      },
+      {
+        path: '/equipment/GIS',
+        name: 'GIS',
+        meta: {
+          icon: 'md-funnel',
+          title: 'GIS'
+        },
+        component: GIS
+      },
+      {
+        path: '/equipment/subareaLine',
+        name: 'subareaLine',
+        meta: {
+          icon: 'md-funnel',
+          title: '分区线路'
+        },
+        component: SUBAREALINE
+      },
+      {
+        path: '/equipment/goodwayGoods',
+        name: 'goodwayGoods',
+        meta: {
+          icon: 'md-funnel',
+          title: '货道商品'
+        },
+        component: GOODWAYGOODS
+      }
+    ]
+  },
+  // 客户类
+  {
+    path: '/client',
+    name: '客户',
+    meta: {
+      icon: 'md-menu',
+      title: '客户'
+    },
+    component: () => import('@/components/main/main'),
+    children: [
+      {
+        path: 'clientManagement',
+        name: '会员',
+        meta: {
+          icon: 'md-funnel',
+          title: '会员'
+        },
+        component: CLIENTMANAGEMENT
+      },
+      {
+        path: 'integral',
+        name: '积分',
+        meta: {
+          icon: 'md-funnel',
+          title: '积分'
+        },
+        component: INTEGRAL
+      }
+    ]
+  },
+  // 库存类
+  {
+    path: '/stock',
+    name: '库存',
+    meta: {
+      icon: 'md-menu',
+      title: '库存'
+    },
+    component: () => import('@/components/main/main'),
+    children: [
+      {
+        path: 'stockControl',
+        name: '库存监控',
+        meta: {
+          icon: 'md-funnel',
+          title: '库存监控'
+        },
+        component: STOCKCONTROL
+      },
+      {
+        path: 'stockAdd',
+        name: '补货记录',
+        meta: {
+          icon: 'md-funnel',
+          title: '补货记录'
+        },
+        component: STOCKADD
+      }
+    ]
+  },
+
+  // 系统类
+  {
+    path: '/system',
+    name: '系统',
+    meta: {
+      icon: 'md-menu',
+      title: '系统'
+    },
+    component: () => import('@/components/main/main'),
+    children: [
+      {
+        path: 'department',
+        name: '部门管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '部门管理'
+        },
+        component: DEPARTMENT
+      },
+      {
+        path: 'userManagement',
+        name: '用户管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '用户管理'
+        },
+        component: USERMANAGEMENT
+      },
+      {
+        path: 'role',
+        name: '角色管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '角色管理'
+        },
+        component: ROLE
+      },
+    ]
+  }
 ]

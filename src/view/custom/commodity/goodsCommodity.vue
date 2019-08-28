@@ -7,7 +7,7 @@
         <Cascader :data="selectData" v-model="selectValue" @on-change="selectChange" v-if='selectData.length' ></Cascader>
         <Button @click='getPageDatas'>查询</Button>
         <Button  type="primary" @click='showNewlyAdded("xz")'>新增</Button>
-        <!-- <Table border ref="selection" :columns="columns" :data="datas" height="700">
+        <Table border ref="selection" :columns="columns" :data="datas" height="700">
 					<template slot-scope="{ row, index }"  slot="edit">
               <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>编辑</Button>
               <Button type="error" size="small" @click="modalDel=true;delID=row.id;delIndex=index">删除</Button>
@@ -19,8 +19,8 @@
               <Button type="success" size="small" @click="enable(row.id,row.enable,index)" v-if='row.enable=="START"'>上架</Button>
 							<Button type="error" size="small" @click="enable(row.id,row.enable,index)" v-else>下架</Button>
           </template>
-        </Table> -->
-        <el-table
+        </Table>
+        <!-- <el-table
           :data="datas"
           style="width:auto;marginTop:10px"
           height="700"
@@ -101,7 +101,7 @@
               <Button type="error" size="small" @click="modalDel=true;delID=scope.row.id;delIndex=scope.$index">删除</Button>
             </template>
           </el-table-column>
-        </el-table>
+        </el-table> -->
         <Page :total="total" show-elevator :current='pageNum' @on-change='pageChange' :page-size='pageSize'/>
       </div>
       <Modal v-model="modalDel" width="360">
@@ -334,27 +334,7 @@ export default {
       ]
     }
   },
-  // watch:{
-  //   'formValidate.buyPriceUpper':{
-  //     handler(newName, oldName) {
-  //       newName = parseInt(newName)?parseInt(newName):'0';
-  //       console.log(newName);
-  //       if(newName>100){
-  //         this.$set(this.formValidate,'buyPriceUpper',100+'%3')
-  //       }else if(newName<0){
-  //         this.$set(this.formValidate,'buyPriceUpper',0+'%')
-  //       }else{
-  //         this.$set(this.formValidate,'buyPriceUpper',newName+'%')
-  //       }
-  //     },
-  //     immediate: true,
-  //     deep: true
-  //   }
-  // },
   methods: {
-    show (index) {
-      console.log(index%2)
-    },
     PercentageChange(value){
       this.formValidate.buyPriceUpper = value;
     },
