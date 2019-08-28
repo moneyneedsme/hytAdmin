@@ -316,7 +316,7 @@ export const addMerchant = ({
 
 // 暴露接口方法---删除商户/渠道信息
 export const delMerchant = ({ channelId }) => {
-  return baseURLAxios.delete(`/role/deleteRole?channelId=${channelId}`)
+  return baseURLAxios.delete(`/channel/deleteChannel?channelId=${channelId}`)
 }
 
 // 暴露接口方法---修改商户/渠道信息
@@ -340,5 +340,81 @@ export const editMerchant = ({
 
 // 暴露接口方法---获取商户/渠道信息树
 export const getMerchantTree = ({ channelId }) => {
-  return baseURLAxios.get(`/channel/queryChannelTreeByChannelId?channelId=${channelId}`)
+  return baseURLAxios.get(
+    `/channel/queryChannelTreeByChannelId?channelId=${channelId}`
+  )
+}
+
+// AppSecret秘钥管理篇
+// 暴露接口方法---获取秘钥信息
+export const appSecret = ({
+  appId, //应用id
+  appSecret, // 秘钥
+  enable, //是否启用
+  mchId, //商户号
+  mchName, //商户名
+  pageNum, //页码
+  pageSize //页容量
+}) => {
+  return baseURLAxios.post(`/appSecret/queryAppSecretListByCondition`, {
+    appId,
+    appSecret,
+    enable,
+    mchId,
+    mchName,
+    pageNum,
+    pageSize
+  })
+}
+
+// 暴露接口方法---新增秘钥信息
+export const addAppSecret = ({
+  appId, //应用id
+  appSecret, // 秘钥
+  enable, //是否启用
+  mchId, //商户号
+  mchName, //商户名
+  operator, //操作人
+  remark //备注
+}) => {
+  return baseURLAxios.post(`/appSecret/addAppSecret`, {
+  appId, 
+  appSecret, 
+  enable, 
+  mchId, 
+  mchName, 
+  operator, 
+  remark 
+  })
+}
+
+
+// 暴露接口方法---删除秘钥信息
+export const delAppSecret = ({ id }) => {
+  return baseURLAxios.delete(`/appSecret/deleteAppSecret?id=${id}`)
+}
+
+// 暴露接口方法---修改秘钥信息
+export const editAppSecret = ({
+  appId, //应用id
+  appSecret, // 秘钥
+  enable, //是否启用
+  id, //主键id
+  mchId, //商户号
+  mchName, //商户名
+  operator, //操作人
+  remark //备注
+}) => {
+  return baseURLAxios.post(`/appSecret/modifyAppSecret`,
+    {
+      appId,
+      appSecret,
+      enable,
+      id,
+      mchId,
+      mchName,
+      operator,
+      remark
+    }
+  )
 }

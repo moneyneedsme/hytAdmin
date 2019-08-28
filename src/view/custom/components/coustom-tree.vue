@@ -40,7 +40,7 @@ export default {
     getMerchantTree({
       channelId:1
     }).then(backData=>{
-      console.log(backData);
+      // console.log(backData);
     })
   }
 }
