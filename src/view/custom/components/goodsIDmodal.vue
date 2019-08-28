@@ -19,7 +19,6 @@
   </div>
 </template>
 <script>
-import {netWork} from '@/api/data'
 export default {
 	name: 'goodsIDmodal',
 	props:{

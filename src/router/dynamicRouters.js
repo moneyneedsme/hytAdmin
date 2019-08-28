@@ -7,6 +7,7 @@ import CHANNElGOODSCOMMODITY from '@/view/custom/commodity/channelGoodsCommodity
 import COMMODITYTYPES from '@/view/custom/commodity/commodityTypes';
 import CHANNElCOMMODITYTYPES from '@/view/custom/commodity/channelCommodityTypes';
 import COMMODITYPRICE from '@/view/custom/commodity/commodityPrice';
+import COMMODITYPRICEDETAILS from '@/view/custom/commodity/commodityPriceDetails';
 import DEVICEMANAGEMENT from '@/view/custom/equipment/deviceManagement';
 import TROUBLESHOOTING from '@/view/custom/equipment/troubleshooting';
 import GIS from '@/view/custom/equipment/GIS';
@@ -90,6 +91,15 @@ export default [
           title: '商品价格模版'
         },
         component: COMMODITYPRICE
+			},
+			{
+        path: '/commodity/commodityPriceDetails',
+        name: 'commodityPriceDetails',
+        meta: {
+          icon: 'md-funnel',
+          title: '商品价格模版详情'
+        },
+        component: COMMODITYPRICEDETAILS
       },
       {
         path: '/commodity/commodityTypes',

@@ -14,8 +14,8 @@
               <img :src="row.imageAddress">
           </template>
 					<template slot-scope="{ row,index}" slot="status">
-              <Button type="success" size="small" @click="enable(row.id,row.enable,index)" v-if='row.enable=="START"'>上架</Button>
-							<Button type="error" size="small" @click="enable(row.id,row.enable,index)" v-else>下架</Button>
+              <Button type="success" size="small" @click="enable(row.id,row.status,index)" v-if='row.status'>上架</Button>
+							<Button type="error" size="small" @click="enable(row.id,row.status,index)" v-else>下架</Button>
           </template>
         </Table>
         <Page :total="total" show-elevator :current='pageNum' @on-change='pageChange' :page-size='pageSize'/>
@@ -45,22 +45,21 @@
           <FormItem label="商品售价" prop="salePrice">
             <Input v-model.trim="formValidate.salePrice" placeholder="请输入商品售价"></Input>
           </FormItem>
+          <FormItem label="实际售价" prop="actualPrice">
+            <Input v-model.trim="formValidate.actualPrice" placeholder="请输入实际售价"></Input>
+          </FormItem>
           <FormItem label="渠道分类" prop="categorylId">
-            <!-- <Input v-model.trim="formValidate.categorylId" placeholder="请输入渠道分类id"></Input> -->
             <Select v-model="formValidate.categorylId">
                 <Option v-for="item in channelList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
-          <!-- <FormItem label="渠道id" prop="channelId">
-            <Input v-model.trim="formValidate.channelId" placeholder="请输入渠道id"></Input>
-          </FormItem> -->
           <FormItem label="备注" prop="remark">
             <Input v-model.trim="formValidate.remark" placeholder="请输入备注"></Input>
           </FormItem>
-          <FormItem label="状态" prop="enable">
-            <RadioGroup v-model="formValidate.enable">
-              <Radio label="START">上架</Radio>
-              <Radio label="STOP">下架</Radio>
+          <FormItem label="状态">
+            <RadioGroup v-model="formValidate.status">
+              <Radio label=1>上架</Radio>
+              <Radio label=0>下架</Radio>
             </RadioGroup>
           </FormItem>
         </Form>
@@ -111,8 +110,9 @@ export default {
         categorylId:null,//渠道分类id
         productId:null,//商品id
         salePrice: null,//商品售价
+        actualPrice:null,//实际售价
         remark:null,//备注
-        enable:'START',
+        status:'1',
         productName:null,
       },
       ruleValidate: {
@@ -138,6 +138,13 @@ export default {
           }
         ],
         salePrice: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur",
+          }
+        ],
+        actualPrice: [
           {
             required: true,
             message: "输入不能为空",
@@ -272,33 +279,30 @@ export default {
         categorylId:null,//渠道分类id
         productId:null,//商品id
         salePrice: null,//商品售价
+        actualPrice:null,//实际售价
         remark:null,//备注
-        enable:'START',
+        status:'1',
+        productName:null,
       }
       this.categoryIdValue = [];
       if(type=='bj'){
         this.formValidate = this.datas[index];
-        // let ary = this.datas[index].categoryIds.split(",")
-        // ary =ary.map(item=>{
-        //   return parseInt(item)
-        // })
-        // this.formValidate.categoryId = [...this.categoryIdValue,...ary,this.datas[index].categoryId]
-        // this.formValidate.categoryId = [ 41, 43, 44 ]
-        console.log(this.formValidate.categoryId)
+        this.formValidate.status =  this.formValidate.status.toString()
       }
       this.newlyAdded=true
     },
     Added(value){
-      if(value.buyPrice&&value.categorylId&&value.productId&&value.salePrice){
-          let  { buyPrice ,categorylId,productId,salePrice,remark,enable} =  value;
+      if(value.buyPrice&&value.categorylId&&value.productId&&value.salePrice&&value.actualPrice){
+          let  { buyPrice ,categorylId,productId,salePrice,remark,status,actualPrice} =  value;
           if(this.showNewlyType=='xz'){
             let data = {
+              actualPrice,
               buyPrice,
               categorylId,
               productId,
               salePrice,
               remark,
-              enable,
+              status:status==1?true:false,
             }
             netWork('/productChannel/productChannelSave',data).then(res=>{
               if(res.data.code===200){
@@ -321,12 +325,13 @@ export default {
             })
           }else if(this.showNewlyType=='bj'){
             let data = {
+              actualPrice,
               buyPrice,
               categorylId,
               productId,
               salePrice,
               remark,
-              enable,
+              status:status==1?true:false,
               id:value.id
             }
             netWork('/productChannel/productChannelModified',data).then(res=>{
@@ -352,7 +357,6 @@ export default {
         }else{
           this.addedLoadding = false;
           this.$Message.error('信息填写不完整！');
-
         }
     },
     del(){
@@ -376,25 +380,14 @@ export default {
       })
     },
     enable(id,value,index){
-      if(value=='START'){
-        value = 'STOP'
-      }else{
-        value = 'START'
-      }
       let data = {
         id,
-        enable:value
+        status:!value
       }
       netWork('/productChannel/productChannelModified',data).then(res=>{
         if(res.data.code===200){
           if(res.data.result){
-            console.log(this.datas[index].enable)
-            if(this.datas[index].enable=='START'){
-              this.datas[index].enable = 'STOP'
-            }else{
-              this.datas[index].enable ='START';
-            }
-            console.log(this.datas[index].enable)
+            this.datas[index].status = !this.datas[index].status;
           }
         }else if(res.data.code===500){
           this.$Message.error(res.data.message);
@@ -409,6 +402,7 @@ export default {
     },
     getPageDatas(){
       let data = {
+        enable: "START",
         productName:this.name,
         pageNum:this.pageNum,
         pageSize:this.pageSize

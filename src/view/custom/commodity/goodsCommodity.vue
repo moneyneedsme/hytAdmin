@@ -15,93 +15,13 @@
 					<template slot-scope="{ row}" slot="img">
               <img :src="row.imageAddress" >
           </template>
-					<template slot-scope="{ row,index}" slot="status">
-              <Button type="success" size="small" @click="enable(row.id,row.enable,index)" v-if='row.enable=="START"'>上架</Button>
-							<Button type="error" size="small" @click="enable(row.id,row.enable,index)" v-else>下架</Button>
+					<template slot-scope="{ row}" slot="status">
+            <span v-if='row.auditStatus==1'>待提交</span>
+            <span v-if='row.auditStatus==2'>待审核</span>
+            <span v-if='row.auditStatus==3'>审核不通过</span>
+            <span v-if='row.auditStatus==4'>审核通过</span>
           </template>
         </Table>
-        <!-- <el-table
-          :data="datas"
-          style="width:auto;marginTop:10px"
-          height="700"
-          row-key="id"
-          border
-          default-expand-all
-          :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-          empty-text="暂无数据"
-          >
-          <el-table-column
-            prop="productCode"
-            label="商品编号"
-            align='center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="productName"
-            label="商品名称"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="categoryName"
-            label="商品类型"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="buyPrice"
-            label="进价"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="salePrice"
-            label="售价"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="img"
-            label="商品图片"
-            align= 'center'
-            >
-            <template slot-scope="scope" v-if='scope.row.imageAddress'>
-              <img :src="scope.row.imageAddress" >
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="productDesc"
-            label="商品描述"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="状态"
-            align= 'center'
-            >
-            <template slot-scope="scope" v-if='scope.row.enable'>
-              <Button type="success" size="small" @click="enable(scope.row.id,scope.row.enable,scope.$index)" v-if='scope.row.enable=="START"'>上架</Button>
-							<Button type="error" size="small" @click="enable(scope.row.id,scope.row.enable,scope.$index)" v-else>下架</Button>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="updateDate"
-            label="更新时间"
-            align= 'center'
-            >
-          </el-table-column>
-          <el-table-column
-            prop="edit"
-            label="操作"
-            align= 'center'
-            >
-            <template slot-scope="scope" v-if='scope.row.id'>
-              <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",scope.$index)'>编辑</Button>
-              <Button type="error" size="small" @click="modalDel=true;delID=scope.row.id;delIndex=scope.$index">删除</Button>
-            </template>
-          </el-table-column>
-        </el-table> -->
         <Page :total="total" show-elevator :current='pageNum' @on-change='pageChange' :page-size='pageSize'/>
       </div>
       <Modal v-model="modalDel" width="360">
@@ -117,7 +37,7 @@
         </div>
       </Modal>
       <!-- 新增弹框的模态框 -->
-      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增商品':'编辑商品'" :loading='addedLoadding' :mask-closable='false'>
+      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增基础商品':'编辑基础商品'" :loading='addedLoadding' :mask-closable='false'>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
           <FormItem label="商品名称" prop="productName">
             <Input v-model.trim="formValidate.productName" placeholder="请输入商品名称"></Input>
@@ -149,9 +69,6 @@
           </FormItem>
           <FormItem label="商品描述" prop="productDesc">
             <Input v-model.trim="formValidate.productDesc" placeholder="请输入商品描述"></Input>
-          </FormItem>
-          <FormItem label="操作人姓名" prop="operatorName">
-            <Input v-model.trim="formValidate.operatorName" placeholder="请输入操作人姓名"></Input>
           </FormItem>
           <FormItem label="状态" prop="enable">
             <RadioGroup v-model="formValidate.enable">
@@ -191,7 +108,6 @@ export default {
         salePrice: "",//售价
         productDesc:'',//商品描述
         enable:'START',
-        operatorName: "",//操作人姓名
       },
       ruleValidate: {
         productName: [
@@ -238,13 +154,6 @@ export default {
           }
         ],
         productDesc: [
-          {
-            required: true,
-            message: "输入不能为空",
-            trigger: "blur"
-          }
-        ],
-        operatorName: [
           {
             required: true,
             message: "输入不能为空",
@@ -350,15 +259,18 @@ export default {
         salePrice: "",//售价
         productDesc:'',//商品描述
         enable:'START',
-        operatorName: "",//操作人姓名
       }
       this.categoryIdValue = [];
       if(type=='bj'){
         this.formValidate = this.datas[index];
-        let ary = this.datas[index].categoryIds.split(",")
-        ary =ary.map(item=>{
-          return parseInt(item)
-        })
+        console.log(this.datas[index].categoryIds)
+        let ary = [];
+        if(this.datas[index].categoryIds){
+          ary = this.datas[index].categoryIds.split(",")
+          ary =ary.map(item=>{
+            return parseInt(item)
+          })
+        }
         this.formValidate.categoryId = [...this.categoryIdValue,...ary,this.datas[index].categoryId]
         // this.formValidate.categoryId = [ 41, 43, 44 ]
         console.log(this.formValidate.categoryId)
@@ -366,14 +278,13 @@ export default {
       this.newlyAdded=true
     },
     Added(value){
-      if(value.buyPrice&&value.buyPriceUpper&&value.categoryId.length>0&&value.operatorName&&value.productCode&&value.productDesc&&value.productName&&value.salePrice){
-          let  { buyPrice ,buyPriceUpper,categoryId,operatorName,productCode,productDesc,enable,productName,salePrice} =  value;
+      if(value.buyPrice&&value.buyPriceUpper&&value.categoryId.length>0&&value.productCode&&value.productDesc&&value.productName&&value.salePrice){
+          let  { buyPrice ,buyPriceUpper,categoryId,productCode,productDesc,enable,productName,salePrice,auditStatus} =  value;
           if(this.showNewlyType=='xz'){
             let data = {
               buyPrice,
               buyPriceUpper,
               categoryId:categoryId[categoryId.length-1],
-              operatorName,
               productCode,
               productDesc,
               enable,
@@ -404,12 +315,12 @@ export default {
               buyPrice,
               buyPriceUpper,
               categoryId:categoryId[categoryId.length-1],
-              operatorName,
               productCode,
               productDesc,
               enable,
               productName,
               salePrice,
+              auditStatus,
               id:value.id
             }
             netWork('/product/productModified',data).then(res=>{
@@ -461,40 +372,13 @@ export default {
         console.log(err)
       })
     },
-    enable(id,value,index){
-      if(value=='START'){
-        value = 'STOP'
-      }else{
-        value = 'START'
-      }
-      let data = {
-        id,
-        enable:value
-      }
-      netWork('/product/productModified',data).then(res=>{
-        if(res.data.code===200){
-          if(res.data.result){
-            console.log(this.datas[index])
-            if(this.datas[index].enable=='START'){
-              this.datas[index].enable = 'STOP'
-            }else{
-              this.datas[index].enable ='START';
-            }
-            console.log(this.datas[index].enable)
-          }
-        }else if(res.data.code===500){
-          this.$Message.error(res.data.message);
-        }
-      }).catch(err=>{
-        console.log(err)
-      })
-    },
     pageChange(value){
       this.pageNum = value;
       this.getPageDatas();
     },
     getPageDatas(){
       let data = {
+        enable: "START",
         productCode:this.numID,
         productName:this.name,
         categoryId:this.categoryId,

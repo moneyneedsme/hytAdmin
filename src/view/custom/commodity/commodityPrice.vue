@@ -2,14 +2,9 @@
 	<div class='commodityPrice'>
       <Coustom-tree></Coustom-tree>
       <div>
-        <Input v-model="name"  placeholder="分类名称" clearable/>
-        <Select v-model="conditionValue">
-            <Option v-for="item in conditionList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
+        <Input v-model="name"  placeholder="模板名称" clearable/>
         <Button @click='getPageDatas'>查询</Button>
         <Button  type="primary" @click='showNewlyAdded("xz")'>新增</Button>
-				<!-- <Button  type="primary">删除</Button>
-				<Button  type="primary">导出</Button> -->
         <Table border ref="selection" :columns="columns" :data="datas" height="700">
           <template slot-scope="{ row, index }"    slot="edit">
               <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>编辑</Button>
@@ -32,21 +27,15 @@
         </div>
       </Modal>
       <!-- 新增弹框的模态框 -->
-      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增商品类型':'编辑商品类型'" :loading='addedLoadding' :mask-closable='false'>
+      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增商品价格模版':'编辑商品价格模版'" :loading='addedLoadding' :mask-closable='false'>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
-          <FormItem label="分类名称" prop="categoryName">
-            <Input v-model.trim="formValidate.categoryName" placeholder="请输入分类名称"></Input>
+          <FormItem label="模板名称" prop="templateName">
+            <Input v-model.trim="formValidate.templateName" placeholder="模板名称"></Input>
           </FormItem>
-          <FormItem label="父id">
-            <Cascader :data="selectData" v-model="formValidate.pid" v-if='selectData.length' change-on-select :disabled='showNewlyType=="bj"'></Cascader>
-          </FormItem>
-          <FormItem label="备注">
-            <Input v-model.trim="formValidate.remark" placeholder="请输入备注"></Input>
-          </FormItem>
-          <FormItem label="分类类型" prop="categoryType">
-            <RadioGroup v-model="formValidate.categoryType">
-              <Radio label="PATH">路径</Radio>
-              <Radio label="CLASSIFY">分类</Radio>
+          <FormItem label="状态">
+            <RadioGroup v-model="formValidate.enable">
+              <Radio label="1">上架</Radio>
+              <Radio label="0">下架</Radio>
             </RadioGroup>
           </FormItem>
         </Form>
@@ -67,17 +56,6 @@ export default {
   name: 'commodityPrice',
   data () {
     return {
-      conditionValue:null,
-      conditionList:[
-        {
-          value:'PATH',
-          label:'路径',
-        },
-        {
-          value:'CLASSIFY',
-          label:'分类',
-        }
-      ],
       modalDel:false,
       modal_loading:false,//删除的loading
       delID:null,//删除的ID
@@ -87,13 +65,11 @@ export default {
       addedLoadding:true,
       newlyAdded:false,//新增按钮的弹框
       formValidate:{ //新增字段
-        categoryName: null, //分类名称
-        pid:[],//父id
-        remark: null,//备注
-        categoryType: 'PATH',//分类类型
+        templateName: null, //模板名称
+        enable: '1',//分类类型
       },
       ruleValidate: {
-        categoryName: [
+        templateName: [
           {
             required: true,
             message: "输入不能为空",
@@ -101,7 +77,6 @@ export default {
           }
         ]
       },
-      selectData:[],
       pageNum:1, //当前页数
       total:null,//总条数
       pageSize:15,//每页条数
@@ -109,14 +84,8 @@ export default {
       datas: [],
       columns: [
         {
-          title: '分类名称',
-          key: 'categoryName',
-          align: 'center',
-          tooltip:true
-        },
-        {
-          title: '分类类型',
-          key: 'categoryType',
+          title: '模板名称',
+          key: 'templateName',
           align: 'center',
           tooltip:true
         },
@@ -158,7 +127,7 @@ export default {
     },
     del(){
       this.modal_loading = true;
-      let url = '/category/categoryDelete?id='+this.delID
+      let url = '/priceTemplate/priceTemplateDelete?id='+this.delID
       netWork(url).then(res=>{
         if(res.data.code===200){
           this.modal_loading = false;
@@ -179,39 +148,26 @@ export default {
     showNewlyAdded(type,index){
       this.showNewlyType = type;
       //初始化数据
-      this.formValidate = { //新增字段
-        categoryName: "", //分类名称
-        pid:[],//父id
-        remark: "",//备注
-        categoryType: 'PATH',//分类类型
+      this.formValidate = {//新增字段
+        templateName: null, //模板名称
+        enable: '1',//分类类型
       };
       this.pIdValue = [];
       if(type=='bj'){
         this.formValidate = this.datas[index];
-        console.log(this.datas[index])
-        let ary =[];
-        if(this.datas[index].pids){
-          ary = this.datas[index].pids.split(",");
-        }
-        console.log(ary)
-        ary =ary.map(item=>{
-          return parseInt(item)
-        })
-        this.formValidate.pid = [...this.pIdValue,...ary,this.datas[index].pid]
+        this.formValidate.enable =  this.formValidate.enable.toString();
       }
       this.newlyAdded=true
     },
     Added(value){
-      if(value.categoryName){
-          let  { categoryName,pid,remark,categoryType} =  value;
+      if(value.templateName){
+          let  { templateName,enable} =  value;
           if(this.showNewlyType=='xz'){
             let data = {
-              categoryName,
-              pid:pid[pid.length-1],
-              remark,
-              categoryType
+              templateName,
+              enable:enable==1?true:false,
             }
-            netWork('/category/categorySave',data).then(res=>{
+            netWork('/priceTemplate/priceTemplateSave',data).then(res=>{
               if(res.data.code===200){
                 if(res.data.result){
                   // this.categoryId = null; //清除掉 筛选id
@@ -231,13 +187,11 @@ export default {
             })
           }else if(this.showNewlyType=='bj'){
             let data = {
-              categoryName,
-              // pid:pid[pid.length-1],
-              remark,
-              categoryType,
+              templateName,
+              enable:enable==1?true:false,
               id:value.id
             }
-            netWork('/category/categoryModified',data).then(res=>{
+            netWork('/priceTemplate/priceTemplateModified',data).then(res=>{
               if(res.data.code===200){
                 if(res.data.result){
                   // this.categoryId = null; //清除掉 筛选id
@@ -261,30 +215,18 @@ export default {
           this.$Message.error('信息填写不完整！');
         }
     },
-    getSelectData(){
-      netWork('/category/findCategoryTree').then(res=>{
-        // console.log(res.data)
-        if(res.data.code===200){
-          this.selectData = res.data.result;
-        }else if(res.data.code===500){
-          this.$Message.error(res.data.message);
-        }
-      }).catch(err=>{
-        console.log(err)
-      })
-    },
     pageChange(value){
       this.pageNum = value;
       this.getPageDatas();
     },
     getPageDatas(){
       let data = {
-        categoryName:this.name,
-        categoryType:this.conditionValue,
+        templateName:this.name,
+        enable:true,
         pageNum:this.pageNum,
         pageSize:this.pageSize
       }
-      netWork('/category/findCategoryPage',data).then(res=>{
+      netWork('/priceTemplate/findPriceTemplatePage',data).then(res=>{
         if(res.data.code===200){
           this.pageNum = res.data.result.pageNum;
           this.total = res.data.result.total;
@@ -300,7 +242,6 @@ export default {
   },
   mounted () {
     this.getPageDatas();
-    this.getSelectData();
   }
 }
 </script>

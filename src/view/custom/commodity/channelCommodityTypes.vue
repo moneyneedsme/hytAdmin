@@ -29,7 +29,7 @@
         </div>
       </Modal>
       <!-- 新增弹框的模态框 -->
-      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增渠道商商品类型':'编辑渠道商商品类型'" :loading='addedLoadding' :mask-closable='false'>
+      <Modal v-model="newlyAdded" width="600" :title="showNewlyType=='xz'?'新增渠道商商品分类':'编辑渠道商商品分类'" :loading='addedLoadding' :mask-closable='false'>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
           <FormItem label="分类名称" prop="categoryName">
             <Input v-model.trim="formValidate.categoryName" placeholder="请输入分类名称"></Input>

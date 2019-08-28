@@ -11,7 +11,9 @@ export default {
   data () {
     return {
       nodes: [
-        { id:1, pid:0, name:"随意勾选 1", open:true},
+        { id:1, pid:0, name:"随意勾选 1", open:true,children:[
+          { id:1122, pid:1, name:"随意勾选 1-1", open:true}
+        ]},
         { id:11, pid:1, name:"随意勾选 1-1", open:true},
         { id:111, pid:11, name:"随意勾选 1-1-1"},
         { id:112, pid:11, name:"随意勾选 1-1-2"},
