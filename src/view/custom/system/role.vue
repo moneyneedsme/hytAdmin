@@ -108,7 +108,7 @@ export default {
         roleName: "", //角色名称
         updateDate: "" //修改时间
       },
-      // 新增模态框表格规则
+      // 新增模态框表单规则
       ruleValidate: {
         role: [
           {
@@ -301,7 +301,9 @@ export default {
         roleName: this.roleName
       }).then(backData => {
         console.log(backData);
-        this.dataTable = backData.data.result.list;
+        if(backData.data.code==200){
+          this.dataTable = backData.data.result.list;
+        }
       });
     }
   },

@@ -19,10 +19,14 @@ import STOCKCONTROL from '@/view/custom/stock/stockControl';
 import STOCKADD from '@/view/custom/stock/stockAdd';
 import DEPARTMENT from '@/view/custom/system/department'
 import USERMANAGEMENT from '@/view/custom/system/userManagement';
-import ROLE from '@/view/custom/system/role'
+import ROLE from '@/view/custom/system/role';
+import PURVIEW from '@/view/custom/system/purview';
+import DICT from '@/view/custom/system/dict';
+import APPMANAGE from '@/view/custom/system/appManage';
+import APPSECRET from '@/view/custom/system/appSecret'
 
 export default [
-	{
+  {
     path: '/',
     name: '_home',
     redirect: '/home',
@@ -293,6 +297,42 @@ export default [
         },
         component: ROLE
       },
+      {
+        path: 'purview',
+        name: '权限管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '权限管理'
+        },
+        component: PURVIEW
+      },
+      {
+        path: 'dict',
+        name: '字典管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '字典管理'
+        },
+        component: DICT
+      },
+      {
+        path: 'appManage',
+        name: '应用管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '应用管理'
+        },
+        component: APPMANAGE
+      },
+      {
+        path: 'appSecret',
+        name: '秘钥管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '秘钥管理'
+        },
+        component: APPSECRET
+      }
     ]
   }
 ]
