@@ -17,6 +17,7 @@ import STOCKCONTROL from '@/view/custom/stock/stockControl';
 import STOCKADD from '@/view/custom/stock/stockAdd';
 import DEPARTMENT from '@/view/custom/system/department'
 import USERMANAGEMENT from '@/view/custom/system/userManagement';
+import ROLE from '@/view/custom/system/role'
 
 
 // import parentView from '@/components/parent-view'
@@ -346,7 +347,16 @@ const router2 = [
           title: '用户管理'
         },
         component: USERMANAGEMENT
-      }
+      },
+      {
+        path: 'role',
+        name: '角色管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '角色管理'
+        },
+        component: ROLE
+      },
     ]
   }
 ]

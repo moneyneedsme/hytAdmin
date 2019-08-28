@@ -73,6 +73,7 @@ export const netWork = (URL, info) => {
 //   })
 // }
 
+// 用户篇
 // 暴露接口方法---获取用户信息
 export const userManagement = ({
   channelId,
@@ -170,11 +171,118 @@ export const editUser = ({
   })
 }
 
-// 暴露接口的方法---根据ID查询用户信息
-// export const getUserInfo = ({ id }) => {
-//   return baseURLAxios.get(`/user/queryUserById`,{
-//     params:{
-//       id
-//     }
-//   })
-// }
+// 部门篇
+// 暴露接口方法---获取部门信息
+export const department = ({ channelId, deptName, pageNum, pageSize }) => {
+  return baseURLAxios.post(`/dept/queryDeptListByCondition`, {
+    channelId,
+    deptName,
+    pageNum,
+    pageSize
+  })
+}
+
+// 暴露接口方法---新增部门信息
+export const addDepartment = ({
+  channelId, //渠道id
+  deptName, //部门名称
+  operator, //操作人
+  pid, //父ID
+  pids, //父IDS
+  remark, //备注
+  sort //排序
+}) => {
+  return baseURLAxios.post(`/dept/addDept`, {
+    channelId,
+    deptName,
+    operator,
+    pid,
+    pids,
+    remark,
+    sort
+  })
+}
+
+// 暴露接口方法---删除部门信息
+export const delDepartment = ({ id }) => {
+  return baseURLAxios.delete(`/dept/deleteDept?id=${id}`)
+}
+
+// 暴露接口方法---修改部门信息
+export const editDepartment = ({
+  channelId, //渠道id
+  deptName, //部门名称
+  id, //主键id
+  operator, //操作人
+  pid, //父ID
+  pids, //父IDS
+  remark, //备注
+  sort //排序
+}) => {
+  return baseURLAxios.post(`/dept/modifyDept`, {
+    channelId,
+    deptName,
+    id,
+    operator,
+    pid,
+    pids,
+    remark,
+    sort
+  })
+}
+
+// 角色篇
+// 暴露接口方法---获取角色信息
+export const role = ({ channelId, roleName, pageNum, pageSize }) => {
+  return baseURLAxios.post(`/role/queryRoleListByCondition`, {
+    channelId,
+    roleName,
+    pageNum,
+    pageSize
+  })
+}
+
+// 暴露接口方法---新增角色信息
+export const addRole = ({
+  channelId, //渠道id
+  createDate, //创建时间
+  operator, //操作人
+  remark, //备注
+  role, //角色
+  roleName, //角色名称
+  updateDate //修改时间
+}) => {
+  return baseURLAxios.post(`/role/addRole`, {
+    channelId,
+    createDate,
+    operator,
+    remark,
+    role,
+    roleName,
+    updateDate
+  })
+}
+
+// 暴露接口方法---删除角色信息
+export const delRole = ({ roleId }) => {
+  return baseURLAxios.delete(`/role/deleteRole?roleId=${roleId}`)
+}
+
+// 暴露接口方法---修改角色信息
+export const editRole = ({
+  channelId, //渠道id
+  id, //主键id
+  operator, //操作人
+  remark, //备注
+  role, //角色
+  roleName //角色名称
+}) => {
+  return baseURLAxios.put(`/role/modifyRole`, {
+    channelId,
+    id,
+    operator,
+    remark,
+    role,
+    roleName
+  })
+}
