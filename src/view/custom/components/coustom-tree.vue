@@ -4,6 +4,7 @@
 
 <script>
 import giantTree from "vue-giant-tree";
+import { getMerchantTree } from "../../../api/data";
 export default {
   name: 'tree',
   components:{giantTree},
@@ -24,6 +25,7 @@ export default {
         { id:222, pid:22, name:"随意勾选 2-2-2"},
         { id:23, pid:2, name:"随意勾选 2-3"}
       ]
+      // nodes:[]
     }
   },
   methods: {
@@ -35,6 +37,11 @@ export default {
     }
   },
   mounted () {
+    getMerchantTree({
+      channelId:1
+    }).then(backData=>{
+      console.log(backData);
+    })
   }
 }
 </script>

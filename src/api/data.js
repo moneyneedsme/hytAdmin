@@ -286,3 +286,59 @@ export const editRole = ({
     roleName
   })
 }
+
+// 商户/渠道篇
+// 暴露接口方法---获取商户/渠道信息
+export const merchant = ({ channelName, pageNum, pageSize }) => {
+  return baseURLAxios.post(`/channel/queryChannelListByCondition`, {
+    channelName,
+    pageNum,
+    pageSize
+  })
+}
+
+// 暴露接口方法---新增商户/渠道信息
+export const addMerchant = ({
+  channelName, //渠道名称
+  operator, //操作人
+  pid, //父id
+  pids, //父ids
+  remark //备注
+}) => {
+  return baseURLAxios.post(`/channel/addChannel`, {
+    channelName,
+    operator,
+    pid,
+    pids,
+    remark
+  })
+}
+
+// 暴露接口方法---删除商户/渠道信息
+export const delMerchant = ({ channelId }) => {
+  return baseURLAxios.delete(`/role/deleteRole?channelId=${channelId}`)
+}
+
+// 暴露接口方法---修改商户/渠道信息
+export const editMerchant = ({
+  channelName, //渠道名称
+  id, //主键id
+  operator, //操作人
+  pid, //父id
+  pids, //父ids
+  remark //备注
+}) => {
+  return baseURLAxios.post(`/channel/modifyChannel`, {
+    channelName,
+    id,
+    operator,
+    pid,
+    pids,
+    remark
+  })
+}
+
+// 暴露接口方法---获取商户/渠道信息树
+export const getMerchantTree = ({ channelId }) => {
+  return baseURLAxios.get(`/channel/queryChannelTreeByChannelId?channelId=${channelId}`)
+}

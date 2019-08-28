@@ -56,6 +56,7 @@ export default {
   mounted () {
     const routers = getMenuByRouter(dynamicRouters);
     const originRouteNames = this.$router.options.routes.map(r => r.name);
+    
     // 需要解决重复加入问题
     if (routers && routers.length && originRouteNames.indexOf(routers[0].name) < 0) {
         console.log(dynamicRouters)

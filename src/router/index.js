@@ -24,6 +24,8 @@ const LOGIN_PAGE_NAME = 'login'
 
 //刷新路由
 function refreshRoute (){
+  // console.log(9999999999)
+  // console.log(localRead('dynamicRouters'))
   const routersList = JSON.parse(localRead('dynamicRouters'));
   const originRouteNames = router.options.routes.map(r => r.name);
     // 需要解决重复加入问题
@@ -54,9 +56,9 @@ router.beforeEach( async (to, from, next) => {
       name: homeName // 跳转到homeName页
     })
   } else {
-    if(!from.name){ //页面刷新 
-      refreshRoute();
-    }
+    // if(!from.name){ //页面刷新 
+    //   refreshRoute();
+    // }
     // console.log(store._mutations.setRoutersList)
     if (store.state.user.hasGetInfo) {   //判断是否获取到数据
       // turnTo(to, store.state.user.access, next)   //store.state.user.access  == ['super_admin'] ['super_admin', 'admin']
@@ -65,19 +67,24 @@ router.beforeEach( async (to, from, next) => {
         refreshRoute();
       }
     } else {
-      store.dispatch('getUserInfo').then(user => {
-        // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
-        // turnTo(to, user.access, next)
-        next();
-        if(!from.name){ //页面刷新 
-          refreshRoute();
-        }
-      }).catch(() => {
-        setToken('')
-        next({
-          name: 'login'
-        })
-      })
+      next()
+      if (!from.name) {
+        //页面刷新
+        refreshRoute()
+      }
+      // store.dispatch('getUserInfo').then(user => {
+      //   // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
+      //   // turnTo(to, user.access, next)
+      //   next();
+      //   if(!from.name){ //页面刷新 
+      //     refreshRoute();
+      //   }
+      // }).catch((err) => {
+      //   setToken('')
+      //   next({
+      //     name: 'login'
+      //   })
+      // })
     }
   }
 })
