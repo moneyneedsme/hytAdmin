@@ -42,21 +42,29 @@ export default {
         })
       })
     },
+    forData(array,ary){
+				var data = []
+        for(var i=0;i<array.length;i++){
+					ary[i].path = array[i].path;
+					if(array[i].children){
+						ary[i].children = forData(array[i].children)
+					}
+				}
+				return data
+		}
   },
   mounted () {
-    // const routers = getMenuByRouter(dynamicRouters);
-    // const originRouteNames = this.$router.options.routes.map(r => r.name);
-		// // 需要解决重复加入问题
-    // if (routers && routers.length && originRouteNames.indexOf(routers[0].name) < 0) {
-		// 		this.$router.addRoutes(dynamicRouters)
-    //     this.setRoutersList(dynamicRouters);
-    //     console.log(this.$router.options.routes)
-    //     localSave('dynamicRouters',JSON.stringify(dynamicRouters))
-    // }
-    // // console.log(this.$store.getters.menuList)
-    // console.log(dynamicRouters)
-    // console.log(routers)
-		// console.log(this.$store.getters.menuList)
+    const routers = getMenuByRouter(dynamicRouters);
+    const originRouteNames = this.$router.options.routes.map(r => r.name);
+    // 需要解决重复加入问题
+    if (routers && routers.length && originRouteNames.indexOf(routers[0].name) < 0) {
+        console.log(dynamicRouters)
+        console.log(routers)
+        console.log(this.$router.options.routes)
+				this.$router.addRoutes(dynamicRouters)
+        this.setRoutersList(dynamicRouters);
+        localSave('dynamicRouters',JSON.stringify(dynamicRouters))
+    }
 	},
 }
 

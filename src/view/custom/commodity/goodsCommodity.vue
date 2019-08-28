@@ -7,7 +7,7 @@
         <Cascader :data="selectData" v-model="selectValue" @on-change="selectChange" v-if='selectData.length' ></Cascader>
         <Button @click='getPageDatas'>查询</Button>
         <Button  type="primary" @click='showNewlyAdded("xz")'>新增</Button>
-        <Table border ref="selection" :columns="columns" :data="datas" height="700">
+        <!-- <Table border ref="selection" :columns="columns" :data="datas" height="700">
 					<template slot-scope="{ row, index }"  slot="edit">
               <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>编辑</Button>
               <Button type="error" size="small" @click="modalDel=true;delID=row.id;delIndex=index">删除</Button>
@@ -19,7 +19,89 @@
               <Button type="success" size="small" @click="enable(row.id,row.enable,index)" v-if='row.enable=="START"'>上架</Button>
 							<Button type="error" size="small" @click="enable(row.id,row.enable,index)" v-else>下架</Button>
           </template>
-        </Table>
+        </Table> -->
+        <el-table
+          :data="datas"
+          style="width:auto;marginTop:10px"
+          height="700"
+          row-key="id"
+          border
+          default-expand-all
+          :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+          empty-text="暂无数据"
+          >
+          <el-table-column
+            prop="productCode"
+            label="商品编号"
+            align='center'
+            >
+          </el-table-column>
+          <el-table-column
+            prop="productName"
+            label="商品名称"
+            align= 'center'
+            >
+          </el-table-column>
+          <el-table-column
+            prop="categoryName"
+            label="商品类型"
+            align= 'center'
+            >
+          </el-table-column>
+          <el-table-column
+            prop="buyPrice"
+            label="进价"
+            align= 'center'
+            >
+          </el-table-column>
+          <el-table-column
+            prop="salePrice"
+            label="售价"
+            align= 'center'
+            >
+          </el-table-column>
+          <el-table-column
+            prop="img"
+            label="商品图片"
+            align= 'center'
+            >
+            <template slot-scope="scope" v-if='scope.row.imageAddress'>
+              <img :src="scope.row.imageAddress" >
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="productDesc"
+            label="商品描述"
+            align= 'center'
+            >
+          </el-table-column>
+          <el-table-column
+            prop="status"
+            label="状态"
+            align= 'center'
+            >
+            <template slot-scope="scope" v-if='scope.row.enable'>
+              <Button type="success" size="small" @click="enable(scope.row.id,scope.row.enable,scope.$index)" v-if='scope.row.enable=="START"'>上架</Button>
+							<Button type="error" size="small" @click="enable(scope.row.id,scope.row.enable,scope.$index)" v-else>下架</Button>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="updateDate"
+            label="更新时间"
+            align= 'center'
+            >
+          </el-table-column>
+          <el-table-column
+            prop="edit"
+            label="操作"
+            align= 'center'
+            >
+            <template slot-scope="scope" v-if='scope.row.id'>
+              <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",scope.$index)'>编辑</Button>
+              <Button type="error" size="small" @click="modalDel=true;delID=scope.row.id;delIndex=scope.$index">删除</Button>
+            </template>
+          </el-table-column>
+        </el-table>
         <Page :total="total" show-elevator :current='pageNum' @on-change='pageChange' :page-size='pageSize'/>
       </div>
       <Modal v-model="modalDel" width="360">
@@ -48,10 +130,19 @@
             <Input v-model.trim="formValidate.productCode" placeholder="请输入商品编码"></Input>
           </FormItem>
           <FormItem label="进价" prop="buyPrice">
-            <Input v-model.trim="formValidate.buyPrice" placeholder="请输入进价"></Input>
+            <Input v-model.trim="formValidate.buyPrice" placeholder="请输入进价" ></Input>
           </FormItem>
           <FormItem label="进价上浮百分比" prop="buyPriceUpper">
-            <Input v-model.number.trim="formValidate.buyPriceUpper" placeholder="请输入进价上浮百分比" ></Input>
+            <!-- <Input v-model.trim="formValidate.buyPriceUpper" placeholder="请输入进价上浮百分比" @on-change='textInput'>
+              <span slot="append">%</span>
+            </Input> -->
+            <InputNumber
+            :max="100"
+            v-model="Percentage"
+            :formatter="value => `${value}%`"
+            :parser="value => value.replace('%', '')"
+            @on-change='PercentageChange'
+            ></InputNumber>
           </FormItem>
           <FormItem label="售价" prop="salePrice">
             <Input v-model.trim="formValidate.salePrice" placeholder="请输入售价"></Input>
@@ -82,11 +173,12 @@ import {netWork} from '@/api/data'
 import { setTimeout } from 'timers';
 export default {
   components: {
-    CoustomTree
+    CoustomTree,
   },
   name: 'goodsCommodity',
   data () {
     return {
+      Percentage:0,//浮动百分比
       categoryIdValue:[],
       showNewlyType:'xz',
       addedLoadding:true,
@@ -95,7 +187,7 @@ export default {
         categoryId: [],//商品类型
         productCode: "",//商品编码
         buyPrice: "",//进价
-        buyPriceUpper: "",//进价上浮百分比
+        buyPriceUpper:0,//进价上浮百分比
         salePrice: "",//售价
         productDesc:'',//商品描述
         enable:'START',
@@ -173,7 +265,7 @@ export default {
       pageNum:1,
       total:null,
       pageSize:15,
-			datas: [],
+			datas:[],
       columns: [
 				{
           title: '商品编号',
@@ -245,12 +337,14 @@ export default {
   // watch:{
   //   'formValidate.buyPriceUpper':{
   //     handler(newName, oldName) {
+  //       newName = parseInt(newName)?parseInt(newName):'0';
+  //       console.log(newName);
   //       if(newName>100){
-  //         this.$set(this.formValidate,'buyPriceUpper',100+'%')
+  //         this.$set(this.formValidate,'buyPriceUpper',100+'%3')
   //       }else if(newName<0){
   //         this.$set(this.formValidate,'buyPriceUpper',0+'%')
   //       }else{
-  //         // this.$set(this.formValidate,'buyPriceUpper',newName+'%')
+  //         this.$set(this.formValidate,'buyPriceUpper',newName+'%')
   //       }
   //     },
   //     immediate: true,
@@ -260,6 +354,9 @@ export default {
   methods: {
     show (index) {
       console.log(index%2)
+    },
+    PercentageChange(value){
+      this.formValidate.buyPriceUpper = value;
     },
     showNewlyAdded(type,index){
       this.showNewlyType = type;
@@ -397,7 +494,7 @@ export default {
       netWork('/product/productModified',data).then(res=>{
         if(res.data.code===200){
           if(res.data.result){
-            console.log(this.datas[index].enable)
+            console.log(this.datas[index])
             if(this.datas[index].enable=='START'){
               this.datas[index].enable = 'STOP'
             }else{
@@ -459,7 +556,6 @@ export default {
 
 <style lang="less" scoped>
   .goodsCommodity{
-    
     .ivu-input-wrapper,.ivu-cascader {
       width: 180px;
       margin-right:5px;

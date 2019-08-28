@@ -12,28 +12,28 @@ import GOODWAYGOODS from '@/view/custom/equipment/goodwayGoods';
 
 export default [
 	{
-		path: '/',
-		name: '_home',
-		redirect: '/home',
-		component:()=> import('@/components/main/main'),
-		meta: {
-			hideInMenu: false,
-			notCache: true
-		},
-		children: [
-			{
-				path: '/home',
-				name: 'home',
-				meta: {
-					hideInMenu: false,
-					title: '首页',
-					notCache: true,
-					icon: 'md-home'
-				},
-				component: HOME
-			}
-		]
-	},
+    path: '/',
+    name: '_home',
+    redirect: '/home',
+    component: () => import('@/components/main/main'),
+    meta: {
+      hideInMenu: false,
+      notCache: true
+    },
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        meta: {
+          hideInMenu: false,
+          title: '首页',
+          notCache: true,
+          icon: 'md-home'
+        },
+        component: HOME
+      }
+    ]
+  },
 	{
 		path: '/merchant',
 		name: 'merchant',
@@ -147,5 +147,5 @@ export default [
 				component: GOODWAYGOODS
 			}
 		]
-	}
+	},
 ]

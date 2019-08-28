@@ -46,6 +46,29 @@ const router1 = [
     },
     component: () => import('@/view/login/login.vue')
   },
+  // {
+  //   path: '/',
+  //   name: '_home',
+  //   redirect: '/home',
+  //   component: () => import('@/components/main/main'),
+  //   meta: {
+  //     hideInMenu: false,
+  //     notCache: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '/home',
+  //       name: 'home',
+  //       meta: {
+  //         hideInMenu: false,
+  //         title: '首页',
+  //         notCache: true,
+  //         icon: 'md-home'
+  //       },
+  //       component: HOME
+  //     }
+  //   ]
+  // },
   {
     path: '/401',
     name: 'error_401',
@@ -63,7 +86,7 @@ const router1 = [
     component: () => import('@/view/error-page/500.vue')
   },
   {
-    path: '*',
+    path: '/404',
     name: 'error_404',
     meta: {
       hideInMenu: true

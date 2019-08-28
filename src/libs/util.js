@@ -54,7 +54,8 @@ export const getMenuByRouter = (list, access) => {
  * @returns {Array}
  */
 export const getBreadCrumbList = (route, homeRoute) => {
-  let homeItem = { ...homeRoute, icon: homeRoute.meta.icon }
+  let homeItem = { ...homeRoute, icon: homeRoute.meta?homeRoute.meta.icon:''}
+  // let homeItem = { ...homeRoute }
   let routeMetched = route.matched
   if (routeMetched.some(item => item.name === homeRoute.name)) return [homeItem]
   let res = routeMetched.filter(item => {
@@ -95,7 +96,9 @@ export const getRouteTitleHandled = (route) => {
 
 //展示路由标题
 export const showTitle = (item, vm) => {
-  let { title, __titleIsFunction__ } = item.meta
+  // let { title, __titleIsFunction__ } = item.meta;
+  let __titleIsFunction__ = item.meta?item.meta.__titleIsFunction__:'';
+  let title = item.meta?item.meta.title:'';
   if (!title) return
   if (useI18n) {
     if (title.includes('{{') && title.includes('}}') && useI18n) title = title.replace(/({{[\s\S]+?}})/, (m, str) => str.replace(/{{([\s\S]*)}}/, (m, _) => vm.$t(_.trim())))

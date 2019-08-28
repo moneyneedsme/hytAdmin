@@ -5,7 +5,7 @@
       <Input v-model="channelName" placeholder="商户名称" clearable />
       <Input v-model="contacts" placeholder="联系人" />
       <Input v-model="phone" placeholder="联系电话" />
-      <Button @click="searchMerchantInfo">查询</Button>
+      <Button>查询</Button>
       <Button type="primary" icon="md-add-circle">新增</Button>
       <Button type="primary" icon="md-build">绑定协议</Button>
       <Button type="primary" icon="ios-share-alt">导出</Button>

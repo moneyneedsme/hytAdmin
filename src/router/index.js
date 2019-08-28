@@ -4,6 +4,7 @@ import routes from './routers'
 import store from '@/store'
 import iView from 'iview'
 import {localRead} from "@/libs/util";
+import dynamicRouters from '@/router/dynamicRouters';
 // import { setToken, getToken, canTurnTo, setTitle } from '@/libs/util'
 import { setToken, getToken,setTitle } from '@/libs/util'
 import config from '@/config'
@@ -21,7 +22,22 @@ const LOGIN_PAGE_NAME = 'login'
 //   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 // }
 
-router.beforeEach((to, from, next) => {
+//刷新路由
+function refreshRoute (){
+  const routersList = JSON.parse(localRead('dynamicRouters'));
+  const originRouteNames = router.options.routes.map(r => r.name);
+    // 需要解决重复加入问题
+  if (routersList && routersList.length && originRouteNames.indexOf(routersList[0].name) < 0) {
+      store.commit('setRoutersList',routersList)
+      setTimeout(()=>{
+        router.addRoutes(dynamicRouters) 
+        router.addRoutes([{ path: '*', redirect: '/404' }])
+      },1)
+  }
+  console.log(store)
+}
+
+router.beforeEach( async (to, from, next) => {
   iView.LoadingBar.start()
   const token = getToken()
   if (!token && to.name !== LOGIN_PAGE_NAME) {
@@ -38,28 +54,24 @@ router.beforeEach((to, from, next) => {
       name: homeName // 跳转到homeName页
     })
   } else {
-    // if(!from.name){ //页面刷新 
-    //   const routersList = JSON.parse(localRead('dynamicRouters'));
-    //   const originRouteNames = router.options.routes.map(r => r.name);
-    //   // 需要解决重复加入问题
-    //   if (routersList && routersList.length && originRouteNames.indexOf(routersList[0].name) < 0) {
-    //       router.addRoutes(routersList)
-    //       store.commit('setRoutersList',routersList)
-    //   }
-    //   console.log(routersList)
-    //   console.log('页面刷新')
-    //   console.log(router.options.routes)
-    //   console.log(store.getters.menuList)
-    // }
+    if(!from.name){ //页面刷新 
+      refreshRoute();
+    }
     // console.log(store._mutations.setRoutersList)
     if (store.state.user.hasGetInfo) {   //判断是否获取到数据
       // turnTo(to, store.state.user.access, next)   //store.state.user.access  == ['super_admin'] ['super_admin', 'admin']
       next();
+      if(!from.name){ //页面刷新 
+        refreshRoute();
+      }
     } else {
       store.dispatch('getUserInfo').then(user => {
         // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
         // turnTo(to, user.access, next)
         next();
+        if(!from.name){ //页面刷新 
+          refreshRoute();
+        }
       }).catch(() => {
         setToken('')
         next({
@@ -75,5 +87,6 @@ router.afterEach(to => {
   iView.LoadingBar.finish()
   window.scrollTo(0, 0)
 })
+
 
 export default router

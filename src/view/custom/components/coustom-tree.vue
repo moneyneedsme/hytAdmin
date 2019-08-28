@@ -1,56 +1,37 @@
 <template>
-		<Tree :data="data1" @on-select-change='treeSelect'></Tree>
+	<giant-tree :nodes="nodes" @onClick='aaaaa'/>
 </template>
 
 <script>
+import giantTree from "vue-giant-tree";
 export default {
   name: 'tree',
+  components:{giantTree},
   data () {
     return {
-      data1: [
-        {
-          title: 'parent 1',
-          expand: true,
-          id: 1,
-          children: [
-            {
-              title: 'parent 1-1',
-              expand: false,
-              id: 2,
-              children: [
-                {
-                  title: 'leaf 1-1-1',
-                  id: 3
-                },
-                {
-                  title: 'leaf 1-1-2',
-                  id: 4
-                }
-              ]
-            },
-            {
-              title: 'parent 1-2',
-              expand: true,
-              id: 6,
-              children: [
-                {
-                  title: 'leaf 1-2-1',
-                  id: 7
-                },
-                {
-                  title: 'leaf 1-2-1',
-                  id: 8
-                }
-              ]
-            }
-          ]
-        }
+      nodes: [
+        { id:1, pid:0, name:"随意勾选 1", open:true},
+        { id:11, pid:1, name:"随意勾选 1-1", open:true},
+        { id:111, pid:11, name:"随意勾选 1-1-1"},
+        { id:112, pid:11, name:"随意勾选 1-1-2"},
+        { id:12, pid:1, name:"随意勾选 1-2", open:true},
+        { id:121, pid:12, name:"随意勾选 1-2-1"},
+        { id:122, pid:12, name:"随意勾选 1-2-2"},
+        { id:2, pid:0, name:"随意勾选 2", checked:true, open:true},
+        { id:21, pid:2, name:"随意勾选 2-1"},
+        { id:22, pid:2, name:"随意勾选 2-2", open:true},
+        { id:221, pid:22, name:"随意勾选 2-2-1", checked:true},
+        { id:222, pid:22, name:"随意勾选 2-2-2"},
+        { id:23, pid:2, name:"随意勾选 2-3"}
       ]
     }
   },
   methods: {
-    treeSelect (all) {
-      console.log(all)
+    aaaaa(event, treeId, treeNode){
+      console.log(event)
+      console.log(treeId)
+      console.log(treeNode)
+      alert(treeNode.id)
     }
   },
   mounted () {
@@ -59,7 +40,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.ivu-tree{
+.ztree{
 	float: left;
   margin-right: 20px;
   width: 150px;

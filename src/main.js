@@ -15,6 +15,10 @@ import '@/assets/icons/iconfont.css'
 import TreeTable from 'tree-table-vue'
 import VOrgTree from 'v-org-tree'
 import 'v-org-tree/dist/v-org-tree.css'
+import { Table,tableColumn} from 'element-ui';
+Vue.use(Table);
+Vue.use(tableColumn);
+
 // import $ from 'jquery' 
 // 实际打包时应该不引入mock
 /* eslint-disable */
