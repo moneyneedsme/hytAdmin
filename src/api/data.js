@@ -370,24 +370,23 @@ export const appSecret = ({
 // 暴露接口方法---新增秘钥信息
 export const addAppSecret = ({
   appId, //应用id
-  appSecret, // 秘钥
+  appSecret, //秘钥
   enable, //是否启用
   mchId, //商户号
-  mchName, //商户名
+  mchName, //商户名称
   operator, //操作人
   remark //备注
 }) => {
   return baseURLAxios.post(`/appSecret/addAppSecret`, {
-  appId, 
-  appSecret, 
-  enable, 
-  mchId, 
-  mchName, 
-  operator, 
-  remark 
+    appId,
+    appSecret,
+    enable,
+    mchId,
+    mchName,
+    operator,
+    remark
   })
 }
-
 
 // 暴露接口方法---删除秘钥信息
 export const delAppSecret = ({ id }) => {
@@ -397,24 +396,152 @@ export const delAppSecret = ({ id }) => {
 // 暴露接口方法---修改秘钥信息
 export const editAppSecret = ({
   appId, //应用id
-  appSecret, // 秘钥
+  appSecret, //秘钥
   enable, //是否启用
   id, //主键id
   mchId, //商户号
-  mchName, //商户名
+  mchName, //商户名称
   operator, //操作人
   remark //备注
 }) => {
-  return baseURLAxios.post(`/appSecret/modifyAppSecret`,
-    {
-      appId,
-      appSecret,
-      enable,
-      id,
-      mchId,
-      mchName,
-      operator,
-      remark
-    }
-  )
+  return baseURLAxios.post(`/appSecret/modifyAppSecret`, {
+    appId,
+    appSecret,
+    enable,
+    id,
+    mchId,
+    mchName,
+    operator,
+    remark
+  })
+}
+
+// App应用管理篇
+// 暴露接口方法---获取APP应用信息
+export const appManage = ({
+  appId, //应用id
+  appDesc, // 应用描述
+  appName, //应用名称
+  pageNum, //页码
+  pageSize //页容量
+}) => {
+  return baseURLAxios.post(`/app/queryAppListByCondition`, {
+    appId,
+    appDesc,
+    appName,
+    pageNum,
+    pageSize
+  })
+}
+
+// 暴露接口方法---新增APP应用信息
+export const addAppManage = ({
+  appId, //应用id
+  appDesc, // 应用描述
+  appName, //应用名称
+  operator, //操作人
+  remark //备注
+}) => {
+  return baseURLAxios.post(`/app/addApp`, {
+    appId,
+    appDesc,
+    appName,
+    operator,
+    remark
+  })
+}
+
+// 暴露接口方法---删除APP应用信息
+export const delAppManage = ({ id }) => {
+  return baseURLAxios.delete(`/app/deleteApp?id=${id}`)
+}
+
+// 暴露接口方法---修改APP应用信息
+export const editAppManage = ({
+  appId, //应用id
+  appDesc, // 应用描述
+  appName, //应用名称
+  id, //主键id
+  operator, //操作人
+  remark //备注
+}) => {
+  return baseURLAxios.post(`/app/modifyApp`, {
+    appId,
+    appDesc,
+    appName,
+    id,
+    operator,
+    remark
+  })
+}
+
+// 字典管理--字典类型篇
+// 暴露接口方法---获取字典类型信息
+export const dictType = ({
+  name, //字典类型名称
+  type, // 字典类型
+  pageNum, //页码
+  pageSize //页容量
+}) => {
+  return baseURLAxios.post(`/dict/queryDictListByCondition`, {
+    name,
+    type,
+    pageNum,
+    pageSize
+  })
+}
+
+// 暴露接口方法---新增字典类型信息
+export const addDictType = ({
+  name, //字典类型名称
+  type, // 字典类型
+  operator, //操作人
+  remark //备注
+}) => {
+  return baseURLAxios.post(`/dict/addDict`, {
+    name,
+    type,
+    operator,
+    remark
+  })
+}
+
+// 暴露接口方法---删除字典类型信息
+export const delDictType = ({ id }) => {
+  return baseURLAxios.delete(`/dict/deleteDict?id=${id}`)
+}
+
+// 暴露接口方法---修改字典类型信息
+export const editDictType = ({
+  name, //字典类型名称
+  type, // 字典类型
+  id, //主键id
+  operator, //操作人
+  remark //备注
+}) => {
+  return baseURLAxios.put(`/dict/modifyDict`, {
+    name,
+    type,
+    id,
+    operator,
+    remark
+  })
+}
+
+// 字典管理--字典数据篇
+// 暴露接口方法---获取字典类型信息
+export const dictData = ({
+  dataName, //字典名称
+  dataValue, // 字典值
+  dictId, //字典类型id
+  pageNum, //页码
+  pageSize //页容量
+}) => {
+  return baseURLAxios.post(`/dictData/queryDictDataListByCondition`, {
+    dataName,
+    dataValue,
+    dictId,
+    pageNum,
+    pageSize
+  })
 }

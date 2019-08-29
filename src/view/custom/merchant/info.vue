@@ -142,6 +142,14 @@ export default {
 
     cancel() {
       this.$Message.info("取消操作");
+      //模态框表单数据
+      this.formValidate= {
+        channelName: "", //渠道名称
+        operator: "", //操作人
+        pid: "", //父id
+        pids: "", //父ids
+        remark: "" //备注
+      }
     },
 
     // 新增点击事件
