@@ -22,8 +22,8 @@
         <!-- 搜索 -->
         <Input suffix="ios-search" style="margin-bottom: 20px" v-model="name" placeholder="请输入字典" />
         <div class="dictContent">
-          <Menu active-name="1" width="240">
-            <MenuItem :name="''+index" v-for="(item,index) in dictTypeList">
+          <Menu active-name="1" width="240" @on-select="selectRow">
+            <MenuItem :name="item.id" v-for="(item,index) in dictTypeList">
               <Icon type="md-document" />
               {{item.name}}
             </MenuItem>
@@ -38,6 +38,29 @@
         </Select>
         <Button type="primary" icon="ios-search" style="margin-left: 10px">查询</Button>
         <Button type="primary" icon="md-add-circle" style="margin-left: 10px">新增</Button>
+        <Table :columns="columns" :data="dataTable" border height="700" style="margin-top: 20px">
+          <template slot-scope="scope" slot="operation">
+            <!-- 编辑按钮 -->
+            <Button
+              type="primary"
+              size="small"
+              icon="md-create"
+              style="margin-right: 5px"
+              @click="editModal(scope.row)"
+            ></Button>
+
+            <!-- 删除按钮 -->
+            <Button type="error" size="small" icon="ios-trash" @click="delOne(scope.row)"></Button>
+          </template>
+        </Table>
+
+        <Page
+          :total="1000"
+          @on-change="handleCurrentChange"
+          :current="pageNumData"
+          style="margin-top: 10px"
+          show-elevator
+        />
       </Col>
     </Row>
 
@@ -71,7 +94,11 @@ import {
   dictType,
   addDictType,
   delDictType,
-  editDictType
+  editDictType,
+  dictData,
+  addDictData,
+  delDictData,
+  editDictData
 } from "../../../api/data";
 export default {
   name: "dict",
@@ -91,6 +118,12 @@ export default {
       type: "", //字典类型
       pageNum: 1, //页码
       pageSize: 15, //页容量
+      dataName: "", //字典名称
+      dataValue: "", // 字典值
+      dictId: "", //字典类型id
+      dictTypeName: "", //字典类型的名称
+      pageNumData: 1, //页码
+      pageSizeData: 15, //页容量
       cityList: [
         {
           value: "1",
@@ -102,13 +135,82 @@ export default {
         }
       ],
       model8: "",
-      // 字典类型数据列表
-      dictTypeList: []
+      // 字典类型列表
+      dictTypeList: [],
+      // 字典数据列表
+      columns: [
+        {
+          title: "#",
+          align: "center",
+          type: "index",
+          maxWidth: 60,
+          tooltip: true
+        },
+        {
+          title: "名称",
+          key: "dataName",
+          align: "center",
+          minWidth: 100,
+          tooltip: true
+        },
+        {
+          title: "数据值",
+          key: "dataValue",
+          align: "center",
+          maxWidth: 100,
+          tooltip: true
+        },
+        {
+          title: "备注",
+          key: "remark",
+          align: "center",
+          minWidth: 50,
+          tooltip: true
+        },
+        {
+          title: "排序值",
+          key: "sort",
+          align: "center",
+          minWidth: 50,
+          tooltip: true
+        },
+        {
+          title: "创建日期",
+          key: "createDate",
+          align: "center",
+          minWidth: 25,
+          tooltip: true
+        },
+        {
+          title: "操作",
+          align: "center",
+          slot: "operation",
+          maxWidth: 120,
+          tooltip: true
+        }
+      ],
+      dataTable: []
     };
   },
   methods: {
     show(index) {
       alert(index);
+    },
+
+    // 页码改变时触发
+    handleCurrentChange(current) {
+      // console.log(current);
+      this.pageNumData = current;
+      // 重新获取数据
+      this.getDictData();
+    },
+
+    // 点击字典类型触发
+    selectRow(name) {
+      console.log(name);
+      this.dictId = name;
+      console.log(this.dictId);
+      
     },
 
     cancel() {
@@ -177,7 +279,7 @@ export default {
       }
     },
 
-    // 获取字典类型数据
+    // 获取字典类型
     getDictType() {
       dictType({
         name: this.name,
@@ -190,11 +292,27 @@ export default {
           this.dictTypeList = backData.data.result.list;
         }
       });
+    },
+    // 获取字典数据
+    getDictData() {
+      dictData({
+        dataName: this.dataName,
+        dataValue: this.dataValue,
+        dictId: this.dictId,
+        pageNum: this.pageNumData,
+        pageSize: this.pageSizeData
+      }).then(backData => {
+        console.log(backData);
+        if (backData.data.code == 200) {
+          this.dataTable = backData.data.result.list;
+        }
+      });
     }
   },
 
   mounted() {
     this.getDictType();
+    this.getDictData();
   }
 };
 </script>

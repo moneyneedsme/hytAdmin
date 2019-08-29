@@ -1,8 +1,7 @@
 import axios from '@/libs/api.request'
 import axiosBase from 'axios'
 //上传文件地址
-export const Upload= 'http://192.168.1.77:10006/file/uploadFile';
-
+export const Upload = 'http://192.168.1.77:10006/file/uploadFile'
 
 // 创建副本
 const baseURLAxios = axiosBase.create({
@@ -66,7 +65,7 @@ export const netWork = (URL, info) => {
     method: 'post'
   })
 }
-export const netWorkHttp = (URL, info,method='post') => {
+export const netWorkHttp = (URL, info, method = 'post') => {
   return axios.request({
     url: 'http://192.168.1.77:10006' + URL,
     data: info,
@@ -539,7 +538,7 @@ export const editDictType = ({
 }
 
 // 字典管理--字典数据篇
-// 暴露接口方法---获取字典类型信息
+// 暴露接口方法---获取字典数据信息
 export const dictData = ({
   dataName, //字典名称
   dataValue, // 字典值
@@ -553,5 +552,54 @@ export const dictData = ({
     dictId,
     pageNum,
     pageSize
+  })
+}
+
+// 暴露接口方法---新增字典数据信息
+export const addDictData = ({
+  dataName, //字典名称
+  dataValue, // 字典值
+  dictId, //字典类型id
+  operator, //操作人
+  remark, //备注
+  sort, //排序
+  createDate, //创建时间
+  updateDate //修改时间
+}) => {
+  return baseURLAxios.post(`/dict/addDict`, {
+    dataName,
+    dataValue,
+    dictId,
+    operator,
+    remark,
+    sort,
+    createDate,
+    updateDate
+  })
+}
+
+// 暴露接口方法---删除字典数据信息
+export const delDictData = ({ id }) => {
+  return baseURLAxios.delete(`/dictData/deleteDictData?id=${id}`)
+}
+
+// 暴露接口方法---修改字典数据信息
+export const editDictData = ({
+  dataName, //字典名称
+  dataValue, // 字典值
+  dictId, //字典类型id
+  id, //主键id
+  operator, //操作人
+  remark, //备注
+  sort //排序
+}) => {
+  return baseURLAxios.put(`/dictData/modifyDictData`, {
+    dataName,
+    dataValue,
+    dictId,
+    id,
+    operator,
+    remark,
+    sort
   })
 }
