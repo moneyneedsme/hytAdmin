@@ -27,7 +27,7 @@ import APPSECRET from '@/view/custom/system/appSecret'
 
 export default [
   {
-    path: '/',
+    path: '/',  
     name: '_home',
     redirect: '/home',
     component: () => import('@/components/main/main'),
@@ -88,13 +88,13 @@ export default [
     component: () => import('@/components/main/main'),
     children: [
       {
-        path: '/commodity/commodityPrice',
-        name: 'commodityPrice',
+        path: '/commodity/commodityPrice', //path
+        name: 'commodityPrice',// title
         meta: {
-          icon: 'md-funnel',
-          title: '商品价格模版'
+          icon: 'md-funnel', //icon
+          title: '商品价格模版'//name
         },
-        component: COMMODITYPRICE
+        component: COMMODITYPRICE //component
 			},
 			{
         path: '/commodity/commodityPriceDetails',

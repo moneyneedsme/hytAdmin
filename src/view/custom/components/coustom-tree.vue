@@ -1,5 +1,5 @@
 <template>
-	<giant-tree :nodes="nodes" @onClick='aaaaa'/>
+	<giant-tree :nodes="treeData" @onClick='pick'/>
 </template>
 
 <script>
@@ -8,6 +8,11 @@ import { getMerchantTree } from "../../../api/data";
 export default {
   name: 'tree',
   components:{giantTree},
+  props:{
+		treeData:{
+			default:[]
+		},
+	},
   data () {
     return {
       nodes: [
@@ -31,11 +36,8 @@ export default {
     }
   },
   methods: {
-    aaaaa(event, treeId, treeNode){
-      console.log(event)
-      console.log(treeId)
-      console.log(treeNode)
-      alert(treeNode.id)
+    pick(event, treeId, treeNode){
+      this.$emit('pickTree',treeNode)
     }
   },
   mounted () {
@@ -52,7 +54,7 @@ export default {
 .ztree{
 	float: left;
   margin-right: 20px;
-  width: 150px;
+  width: 200px;
   min-height: 500px;
 }
 </style>

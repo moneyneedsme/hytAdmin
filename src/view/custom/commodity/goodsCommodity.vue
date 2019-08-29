@@ -16,7 +16,7 @@
               <img :src="row.imageAddress" >
           </template>
 					<template slot-scope="{ row}" slot="status">
-            <span v-if='row.auditStatus==1'>待提交</span>
+            <Button type="success" v-if='row.auditStatus==1'>待提交</Button>
             <span v-if='row.auditStatus==2'>待审核</span>
             <span v-if='row.auditStatus==3'>审核不通过</span>
             <span v-if='row.auditStatus==4'>审核通过</span>
@@ -53,9 +53,6 @@
             <Input v-model.trim="formValidate.buyPrice" placeholder="请输入进价" ></Input>
           </FormItem>
           <FormItem label="进价上浮百分比" prop="buyPriceUpper">
-            <!-- <Input v-model.trim="formValidate.buyPriceUpper" placeholder="请输入进价上浮百分比" @on-change='textInput'>
-              <span slot="append">%</span>
-            </Input> -->
             <InputNumber
             :max="100"
             v-model="Percentage"
@@ -69,6 +66,21 @@
           </FormItem>
           <FormItem label="商品描述" prop="productDesc">
             <Input v-model.trim="formValidate.productDesc" placeholder="请输入商品描述"></Input>
+          </FormItem>
+          <FormItem label="上传图片">
+            <img  :src="uploadImgUrl" alt="" class='uploadImg' v-if='uploadImgUrl'>
+            <template>
+              <Upload 
+                :show-upload-list='false'
+                :action="Upload" name='multipartFile' 
+                :format="['jpg','jpeg','png']"  
+                :on-format-error = 'formtError'
+                :on-error = 'onError'
+                :on-success = 'imgSuccess'
+              >
+                  <Button icon="ios-cloud-upload-outline">上传图片</Button>
+              </Upload>
+            </template>
           </FormItem>
           <FormItem label="状态" prop="enable">
             <RadioGroup v-model="formValidate.enable">
@@ -86,7 +98,7 @@
 </template>
 <script>
 import CoustomTree from '../components/coustom-tree';
-import {netWork} from '@/api/data'
+import {netWork,Upload} from '@/api/data'
 import { setTimeout } from 'timers';
 export default {
   components: {
@@ -95,6 +107,8 @@ export default {
   name: 'goodsCommodity',
   data () {
     return {
+      uploadImgUrl:null,
+      Upload, //上传文件地址
       Percentage:0,//浮动百分比
       categoryIdValue:[],
       showNewlyType:'xz',
@@ -244,11 +258,32 @@ export default {
     }
   },
   methods: {
+    //文件上传
+    formtError(file,fileList){
+      console.log(file)
+      console.log(fileList)
+      this.$Message.error('上传文件类型错误');
+    },
+    onError(error){
+      console.log(err)
+      this.$Message.error('上传失败');
+    },
+    imgSuccess(response){
+      if(response.code===200){
+        this.uploadImgUrl = response.result.url;
+        this.$Message.success('图片上传成功');
+        console.log(this.uploadImgUrl)
+      }else if(response.code===500){
+        this.$Message.error(response.message);
+      }
+      console.log(response);
+    },
     PercentageChange(value){
       this.formValidate.buyPriceUpper = value;
     },
     showNewlyAdded(type,index){
       this.showNewlyType = type;
+      this.uploadImgUrl = null;
       //初始化数据
       this.formValidate = { //新增字段  
         productName: "", //商品名称
@@ -346,7 +381,6 @@ export default {
         }else{
           this.addedLoadding = false;
           this.$Message.error('信息填写不完整！');
-
         }
     },
     selectChange(value){
@@ -448,5 +482,15 @@ export default {
       height: 33px;
     }
   }
-  
+  .uploadImg{
+    width: 50px;
+    height: 50px;
+    border-radius: 2px;
+    margin-right:10px;
+    vertical-align: bottom;
+  }
+  .ivu-upload{
+    display: inline-block;
+    vertical-align: middle;
+  }
 </style>

@@ -190,9 +190,9 @@ export default {
       newlyAdded:false,//新增按钮的弹框
       formValidate:{ //新增字段
         templateId: null, //模板id
-        templateName:null, //模板名称
+        templateName:'', //模板名称
         productId:null,//渠道商品id
-        productName:null,//渠道商品
+        productName:'',//渠道商品
         actualPrice:null,//实际售价
         remark:null,//备注
         buyPrice:null,
@@ -203,7 +203,7 @@ export default {
           {
             required: true,
             message: "输入不能为空",
-            trigger: "blur",
+            trigger: "change",
           }
         ],
         actualPrice: [
@@ -217,7 +217,7 @@ export default {
           {
             required: true,
             message: "输入不能为空",
-            trigger: "blur",
+            trigger: "change",
           }
         ],
       },

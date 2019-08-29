@@ -1,5 +1,8 @@
 import axios from '@/libs/api.request'
 import axiosBase from 'axios'
+//上传文件地址
+export const Upload= 'http://192.168.1.77:10006/file/uploadFile';
+
 
 // 创建副本
 const baseURLAxios = axiosBase.create({
@@ -61,6 +64,13 @@ export const netWork = (URL, info) => {
     url: 'http://192.168.1.62:10007' + URL,
     data: info,
     method: 'post'
+  })
+}
+export const netWorkHttp = (URL, info,method='post') => {
+  return axios.request({
+    url: 'http://192.168.1.77:10006' + URL,
+    data: info,
+    method
   })
 }
 
