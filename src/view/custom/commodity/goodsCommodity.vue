@@ -1,6 +1,5 @@
 <template>
 	<div class="goodsCommodity">
-      <Coustom-tree></Coustom-tree>
       <div>
         <Input v-model="numID"  placeholder="商品编号" clearable/>
         <Input v-model="name"  placeholder="商品名称" clearable/>
@@ -67,8 +66,8 @@
           <FormItem label="商品描述" prop="productDesc">
             <Input v-model.trim="formValidate.productDesc" placeholder="请输入商品描述"></Input>
           </FormItem>
-          <FormItem label="上传图片">
-            <img  :src="uploadImgUrl" alt="" class='uploadImg' v-if='uploadImgUrl'>
+          <FormItem label="上传图片" prop="imageAddress">
+            <img  :src="formValidate.imageAddress" alt="" class='uploadImg' v-if='formValidate.imageAddress' >
             <template>
               <Upload 
                 :show-upload-list='false'
@@ -97,17 +96,14 @@
   </div>
 </template>
 <script>
-import CoustomTree from '../components/coustom-tree';
 import {netWork,Upload} from '@/api/data'
 import { setTimeout } from 'timers';
 export default {
   components: {
-    CoustomTree,
   },
   name: 'goodsCommodity',
   data () {
     return {
-      uploadImgUrl:null,
       Upload, //上传文件地址
       Percentage:0,//浮动百分比
       categoryIdValue:[],
@@ -122,6 +118,8 @@ export default {
         salePrice: "",//售价
         productDesc:'',//商品描述
         enable:'START',
+        imageAddress:null,
+        image:null,
       },
       ruleValidate: {
         productName: [
@@ -171,6 +169,13 @@ export default {
           {
             required: true,
             message: "输入不能为空",
+            trigger: "blur"
+          }
+        ],
+        imageAddress: [
+          {
+            required: true,
+            message: "图片不能为空",
             trigger: "blur"
           }
         ],
@@ -270,9 +275,10 @@ export default {
     },
     imgSuccess(response){
       if(response.code===200){
-        this.uploadImgUrl = response.result.url;
+        this.$set(this.formValidate,'imageAddress',response.result.url)
+        console.log(this.formValidate.imageAddress)
+        this.formValidate.image = response.result.key;
         this.$Message.success('图片上传成功');
-        console.log(this.uploadImgUrl)
       }else if(response.code===500){
         this.$Message.error(response.message);
       }
@@ -313,8 +319,8 @@ export default {
       this.newlyAdded=true
     },
     Added(value){
-      if(value.buyPrice&&value.buyPriceUpper&&value.categoryId.length>0&&value.productCode&&value.productDesc&&value.productName&&value.salePrice){
-          let  { buyPrice ,buyPriceUpper,categoryId,productCode,productDesc,enable,productName,salePrice,auditStatus} =  value;
+      if(value.buyPrice&&value.buyPriceUpper&&value.categoryId.length>0&&value.productCode&&value.productDesc&&value.productName&&value.salePrice&&value.imageAddress){
+          let  { buyPrice ,buyPriceUpper,categoryId,productCode,productDesc,enable,productName,salePrice,auditStatus,imageAddress,image} =  value;
           if(this.showNewlyType=='xz'){
             let data = {
               buyPrice,
@@ -324,7 +330,9 @@ export default {
               productDesc,
               enable,
               productName,
-              salePrice
+              salePrice,
+              imageAddress,
+              image,
             }
             netWork('/product/productSave',data).then(res=>{
               if(res.data.code===200){
@@ -341,6 +349,7 @@ export default {
                 this.$Message.error(res.data.message);
               }
             }).catch(err=>{
+              this.$Message.error('网络连接失败或超时');
               this.newlyAdded = true;
               this.addedLoadding = false;
               console.log(err)
@@ -356,6 +365,8 @@ export default {
               productName,
               salePrice,
               auditStatus,
+              imageAddress,
+              image,
               id:value.id
             }
             netWork('/product/productModified',data).then(res=>{
@@ -373,6 +384,7 @@ export default {
                 this.$Message.error(res.data.message);
               }
             }).catch(err=>{
+              this.$Message.error('网络连接失败或超时');
               this.newlyAdded = true;
               this.addedLoadding = false;
               console.log(err)
@@ -403,6 +415,7 @@ export default {
         }
       }).catch(err=>{
         this.modal_loading = false;
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     },
@@ -428,6 +441,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     },
@@ -441,6 +455,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     },

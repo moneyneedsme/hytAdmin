@@ -1,6 +1,5 @@
 <template>
 	<div class='commodityTypes'>
-      <Coustom-tree></Coustom-tree>
       <div>
         <Input v-model="name"  placeholder="分类名称" clearable/>
         <Button @click='getPageDatas'>查询</Button>
@@ -46,11 +45,9 @@
   </div>
 </template>
 <script>
-import CoustomTree from '../components/coustom-tree';
 import {netWork} from '@/api/data'
 export default {
   components: {
-    CoustomTree
   },
   name: 'commodityTypes',
   data () {
@@ -140,6 +137,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         this.modal_loading = false;
         console.log(err)
       })
@@ -179,6 +177,7 @@ export default {
                 this.$Message.error(res.data.message);
               }
             }).catch(err=>{
+              this.$Message.error('网络连接失败或超时');
               this.newlyAdded = true;
               this.addedLoadding = false;
             })
@@ -202,6 +201,7 @@ export default {
                 this.$Message.error(res.data.message);
               }
             }).catch(err=>{
+              this.$Message.error('网络连接失败或超时');
               this.newlyAdded = true;
               this.addedLoadding = false;
             })
@@ -230,6 +230,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     },

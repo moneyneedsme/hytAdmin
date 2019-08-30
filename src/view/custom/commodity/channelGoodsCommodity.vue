@@ -1,11 +1,13 @@
 <template>
 	<div class="channelGoodsCommodity">
-      <Coustom-tree></Coustom-tree>
       <div>
         <Input v-model="name"  placeholder="商品名称" clearable/>
         <Button @click='getPageDatas'>查询</Button>
         <Button  type="primary" @click='showNewlyAdded("xz")'>新增</Button>
         <Table border ref="selection" :columns="columns" :data="datas" height="700">
+          <template slot-scope="{ row, index }"  slot="history">
+              <Button type="success" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>查看</Button>
+          </template>
 					<template slot-scope="{ row, index }"  slot="edit">
               <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>编辑</Button>
               <Button type="error" size="small" @click="modalDel=true;delID=row.id;delIndex=index">删除</Button>
@@ -82,13 +84,11 @@
   </div>
 </template>
 <script>
-import CoustomTree from '../components/coustom-tree';
 import goodsidModal from '../components/goodsIDmodal';
 import {netWork} from '@/api/data'
 import { setTimeout } from 'timers';
 export default {
   components: {
-    CoustomTree,
     goodsidModal
   },
   name: 'channelGoodsCommodity',
@@ -191,8 +191,8 @@ export default {
           tooltip:true
         },
         {
-          title: '会员价',
-          key: 'memberPrice',
+          title: '实际售价',
+          key: 'actualPrice',
           align: 'center',
           tooltip:true
         },
@@ -219,6 +219,12 @@ export default {
           title: '更新时间',
           key: 'updateDate',
           align: 'center',
+          tooltip:true
+        },
+        {
+          title: '查看历史记录',
+          align: 'center',
+          slot: 'history',
           tooltip:true
         },
         {
@@ -268,6 +274,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     },
@@ -319,6 +326,7 @@ export default {
                 this.$Message.error(res.data.message);
               }
             }).catch(err=>{
+              this.$Message.error('网络连接失败或超时');
               this.newlyAdded = true;
               this.addedLoadding = false;
               console.log(err)
@@ -349,6 +357,7 @@ export default {
                 this.$Message.error(res.data.message);
               }
             }).catch(err=>{
+              this.$Message.error('网络连接失败或超时');
               this.newlyAdded = true;
               this.addedLoadding = false;
               console.log(err)
@@ -375,6 +384,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         this.modal_loading = false;
         console.log(err)
       })
@@ -393,6 +403,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     },
@@ -416,6 +427,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     },
@@ -434,6 +446,7 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
         console.log(err)
       })
     }

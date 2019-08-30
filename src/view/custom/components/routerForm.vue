@@ -1,13 +1,13 @@
 <template>
   <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
-    <FormItem label="名称" prop="title">
-      <Input v-model.trim="formValidate.title"></Input>
+    <FormItem label="名称" prop="name">
+      <Input v-model.trim="formValidate.name"></Input>
     </FormItem>
     <FormItem label="路径" prop="path">
       <Input v-model.trim="formValidate.path"></Input>
     </FormItem>
-    <FormItem label="路由名称" prop="name">
-      <Input v-model.trim="formValidate.name"></Input>
+    <FormItem label="路由名称" prop="title">
+      <Input v-model.trim="formValidate.title"></Input>
     </FormItem>
     <FormItem label="图标" prop="icon">
       <Input v-model.trim="formValidate.icon"></Input>
@@ -34,7 +34,7 @@ export default {
   name: 'fouterFrom',
   props:{
 		formValidate:{
-      default:[]
+      default:{}
     },
     showRadio:{
       default:true

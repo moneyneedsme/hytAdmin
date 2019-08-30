@@ -84,7 +84,6 @@ export default {
   },
   methods:{
     del(){
-      
       let url = '/permission/deletePermission?permissionId='+this.treeID;
       netWorkHttp(url,null,'delete').then(res=>{
         if(res.data.code===200){
@@ -218,14 +217,30 @@ export default {
     },
     pickTree(data){
       console.log(data)
-      this.rowDataName = data.name;
-      this.rowData = data;
-      this.formValidate = data;
-      this.formValidate.type = this.formValidate.type.toString();
-      this.formValidate.backend = this.formValidate.backend.toString();
-      this.formValidate.title = data.meta.title;
-      this.formValidate.icon = data.meta.icon;
-      this.treeID = data.id;
+      if(data){
+        this.rowDataName = data.name;
+        this.rowData = data;
+        this.formValidate = data;
+        console.log(this.formValidate.type)
+        this.formValidate.type = this.formValidate.type.toString();
+        this.formValidate.backend = this.formValidate.backend.toString();
+        this.formValidate.title = data.meta.title;
+        this.formValidate.icon = data.meta.icon;
+        this.treeID = data.id;
+      }else{
+        this.rowDataName = null;
+        this.rowData = null;
+        this.formValidate = { //新增字段
+          name:null,//名称
+          path:null,//路径
+          title:null, //路由名称
+          icon:null,//图标
+          component: null,//前端组件
+          type:'1',//类型
+          backend:'2',//功能类型
+        };
+        this.treeID = null;
+      }
     },
     //获取树的数据
     getTreeData(){
@@ -237,7 +252,7 @@ export default {
       netWorkHttp('/permission/queryUserMenu',data).then(res=>{
         console.log(res.data)
         if(res.data.code===200){
-          this.treeData = res.data.result
+          this.treeData = res.data.result;
         }else if(res.data.code===500){
           this.$Message.error(res.data.message);
         }
@@ -246,7 +261,7 @@ export default {
       })
     }
   },
-  mounted(){
+  created(){
     this.getTreeData();
   },
 }
