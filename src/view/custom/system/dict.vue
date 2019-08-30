@@ -14,7 +14,7 @@
           <DropdownMenu slot="list">
             <DropdownItem :name="dictId">编辑字典</DropdownItem>
             <DropdownItem @click.native="delOne">删除字典</DropdownItem>
-            <DropdownItem @click.native="getDictType()">刷新</DropdownItem>
+            <DropdownItem @click.native="refresh">刷新</DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <!-- 警告 -->
@@ -30,7 +30,7 @@
         />
         <div class="dictContent">
           <Menu active-name="1" width="240" @on-select="selectRow">
-            <MenuItem :name="item.id" v-for="(item,index) in dictTypeList">
+            <MenuItem :name="item.id" v-for="(item,index) in dictTypeList" :key="item.id">
               <Icon type="md-document" />
               {{item.name}}
             </MenuItem>
@@ -112,9 +112,6 @@
         </FormItem>
         <FormItem label="字典值" prop="dataValue">
           <Input v-model="formValidateData.dataValue" placeholder="字典值"></Input>
-        </FormItem>
-        <FormItem label="字典类型id" prop="dictId">
-          <Input v-model="formValidateData.dictId" placeholder="字典类型id"></Input>
         </FormItem>
         <FormItem label="操作人" prop="operator">
           <Input v-model="formValidateData.operator" placeholder="操作人"></Input>
@@ -265,7 +262,7 @@ export default {
     selectRow(name) {
       // console.log(name);
       this.dictId = name;
-      // console.log(this.dictId);
+      console.log(this.dictId);
       this.getsearchDictTypeByID(name);
       this.getDictData();
     },
@@ -283,12 +280,12 @@ export default {
 
     // 字典数据新增点击事件
     addModalData() {
-      this.isAddData = true;
-      this.isShowData = true;
-      if(this.dictId==""){
+      if (this.dictId == "") {
         return this.$Message.error("请选择一个字典类型");
       }
-      
+      this.isAddData = true;
+      this.isShowData = true;
+      this.formValidateData.dictId = this.dictId;
     },
 
     // 字典数据编辑点击事件
@@ -354,7 +351,7 @@ export default {
     delOneData(row) {
       // 显示模态框
       this.delFormVisibleData = true;
-        console.log(row);
+      console.log(row);
       this.$Modal.confirm({
         title: "此操作将永久删除该用户, 是否继续?",
         // 点击了确定
@@ -421,6 +418,16 @@ export default {
       }
     },
 
+    // 字典类型刷新按钮操作
+    refresh() {
+      this.dictId = null;
+      this.pageNum = 1;
+      this.dictTypeList = null;
+      this.dictDataByID = {};
+      this.getDictType();
+      this.getDictData();
+    },
+
     // 字典类型弹框确认的点击事件
     getDictTypeModal(name) {
       if (this.isAdd == true) {
@@ -477,6 +484,7 @@ export default {
         console.log(backData);
         if (backData.data.code == 200) {
           this.dictTypeList = backData.data.result.list;
+          console.log(this.dictTypeList)
         }
       });
     },
