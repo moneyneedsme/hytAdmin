@@ -19,7 +19,7 @@
 import LoginForm from '_c/login-form'
 import { mapActions,mapMutations} from 'vuex';
 import dynamicRouters from '@/router/dynamicRouters';
-import { getMenuByRouter,localSave} from "@/libs/util";
+import { getMenuByRouter,localSave,localRead} from "@/libs/util";
 import { setTimeout } from 'timers';
 import {netWorkHttp} from '@/api/data';
 import {matchingRoute} from '@/router/matching'
@@ -65,17 +65,14 @@ export default {
       netWorkHttp('/permission/queryUserMenu',data).then(res=>{
         if(res.data.code===200){
           const data = res.data.result;
-          const routers = getMenuByRouter(res.data.result);
+          const routers = getMenuByRouter(data);
           const originRouteNames = this.$router.options.routes.map(r => r.name);
           // // 需要解决重复加入问题
           if (routers && routers.length && originRouteNames.indexOf(routers[0].name) < 0) {
-              const AsyncRouter= this.filterAsyncRouter(res.data.result);
-              console.log(AsyncRouter)
-              setTimeout(()=>{
-                this.$router.addRoutes(AsyncRouter);
-              },1)
+              const AsyncRouter= this.filterAsyncRouter(data);
+              this.$router.addRoutes(AsyncRouter);
               this.setAsyncRouter(AsyncRouter);
-              localSave('dynamicRouters',JSON.stringify(AsyncRouter))
+              // localSave('dynamicRouters',JSON.stringify(AsyncRouter));
           }
         }else if(res.data.code===500){
           this.$Message.error(res.data.message);

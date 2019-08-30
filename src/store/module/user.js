@@ -96,7 +96,7 @@ export default {
           commit('setToken', '')
           commit('setRoutersList', []) //清除路由
           localSave('dynamicRouters','')
-          // commit('setAccess', [])
+          commit('setAccess', [])
           resolve()
         }).catch(err => {
           reject(err)
