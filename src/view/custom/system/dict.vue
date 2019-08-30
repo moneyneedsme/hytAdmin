@@ -30,7 +30,7 @@
         />
         <div class="dictContent">
           <Menu active-name="1" width="240" @on-select="selectRow">
-            <MenuItem :name="item.id" v-for="(item,index) in dictTypeList" :key="item.id">
+            <MenuItem :name="item.id" v-for="(item) in dictTypeList" :key="item.id">
               <Icon type="md-document" />
               {{item.name}}
             </MenuItem>
@@ -41,7 +41,7 @@
         数据名称：
         <Input style="width:200px;margin-right: 20px" placeholder="请输入数据名称" clearable />状态：
         <Select v-model="model8" clearable style="width:200px">
-          <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Option v-for="item in List" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <Button type="primary" icon="ios-search" style="margin-left: 10px">查询</Button>
         <Button
@@ -89,9 +89,6 @@
         </FormItem>
         <FormItem label="字典类型" prop="type">
           <Input v-model="formValidate.type" placeholder="字典类型"></Input>
-        </FormItem>
-        <FormItem label="操作人" prop="operator">
-          <Input v-model="formValidate.operator" placeholder="操作人"></Input>
         </FormItem>
         <FormItem label="备注" prop="remark">
           <Input v-model="formValidate.remark" placeholder="备注"></Input>
@@ -177,7 +174,7 @@ export default {
       dictTypeName: "", //字典类型的名称
       pageNumData: 1, //页码
       pageSizeData: 15, //页容量
-      cityList: [
+      List: [
         {
           value: "1",
           label: "正常"
@@ -484,7 +481,7 @@ export default {
         console.log(backData);
         if (backData.data.code == 200) {
           this.dictTypeList = backData.data.result.list;
-          console.log(this.dictTypeList)
+          console.log(this.dictTypeList);
         }
       });
     },

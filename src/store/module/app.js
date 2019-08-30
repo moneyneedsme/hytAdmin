@@ -115,6 +115,9 @@ export default {
       saveErrorLogger(info).then(() => {
         commit('addError', data)
       })
+    },
+    setAsyncRouter({ commit},router){
+      commit('setRoutersList', router)
     }
   }
 }

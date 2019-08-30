@@ -5,20 +5,21 @@
       <Input v-model="roleName" placeholder="角色名称" @keyup.enter.native="getRole" clearable />
       <Button @click="getRole">查询</Button>
       <Button type="primary" icon="md-add-circle" @click="addFormVisible = true">新增</Button>
-      <Button type="primary" icon="ios-share-alt" @click="exportData">导出</Button>
       <Table :columns="columns" :data="dataTable" border height="700" ref="table">
         <!-- 操作 -->
         <template slot-scope="scope" slot="operation">
+          <Button type="warning" size="small" @click="delOne(scope.row)">分配权限</Button>
           <!-- 编辑按钮 -->
           <Button
             type="primary"
             size="small"
-            icon="md-create"
             style="margin-right: 5px"
             @click="enterEdit(scope.row)"
-          ></Button>
+          >编辑</Button>
           <!-- 删除按钮 -->
-          <Button type="error" size="small" icon="ios-trash" @click="delOne(scope.row)"></Button>
+          <Button type="error" size="small" @click="delOne(scope.row)">删除</Button>
+          
+
         </template>
 
         <!-- 状态按钮 -->
@@ -51,7 +52,7 @@
     <!-- 新增弹框的模态框 -->
     <Modal
       v-model="addFormVisible"
-      title="新增【用户】"
+      title="新增【角色】"
       @on-ok="getadduser('formValidate')"
       @on-cancel="cancel"
     >
@@ -62,9 +63,7 @@
         <FormItem label="角色" prop="role">
           <Input v-model="formValidate.role" placeholder="role格式请以ROLE_开头"></Input>
         </FormItem>
-        <FormItem label="渠道id" prop="channelId">
-          <Input v-model="formValidate.channelId" placeholder="渠道id"></Input>
-        </FormItem>
+        
       </Form>
     </Modal>
 
@@ -125,7 +124,7 @@ export default {
         operator: "", //操作人
         remark: "", //备注
         role: "", //角色
-        roleName: "", //角色名称
+        roleName: "" //角色名称
       },
       channelId: 1, //渠道ID
       pageNum: 1, // 页码
@@ -134,17 +133,10 @@ export default {
       // 数据结构
       columns: [
         {
-          title: "#",
+          title: " ",
           align: "center",
           type: "index",
           maxWidth: 60,
-          tooltip: true
-        },
-        {
-          title: "角色名称",
-          key: "roleName",
-          align: "center",
-          // maxWidth: 100,
           tooltip: true
         },
         {
@@ -155,8 +147,8 @@ export default {
           tooltip: true
         },
         {
-          title: "所属部门",
-          key: "channelId",
+          title: "角色名称",
+          key: "roleName",
           align: "center",
           // maxWidth: 100,
           tooltip: true
@@ -175,18 +167,12 @@ export default {
           // maxWidth: 100,
           tooltip: true
         },
-        {
-          title: "更新时间",
-          key: "updateDate",
-          align: "center",
-          // maxWidth: 100,
-          tooltip: true
-        },
+        
         {
           title: "操作",
           align: "center",
           slot: "operation",
-          maxWidth: 120,
+          // maxWidth: 120,
           tooltip: true
         }
       ],
@@ -301,7 +287,7 @@ export default {
         roleName: this.roleName
       }).then(backData => {
         console.log(backData);
-        if(backData.data.code==200){
+        if (backData.data.code == 200) {
           this.dataTable = backData.data.result.list;
         }
       });

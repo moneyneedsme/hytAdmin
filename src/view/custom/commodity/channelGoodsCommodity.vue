@@ -6,7 +6,7 @@
         <Button  type="primary" @click='showNewlyAdded("xz")'>新增</Button>
         <Table border ref="selection" :columns="columns" :data="datas" height="700">
           <template slot-scope="{ row, index }"  slot="history">
-              <Button type="success" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>查看</Button>
+              <Button type="success" size="small" @click='showHistory(row.id)'>查看</Button>
           </template>
 					<template slot-scope="{ row, index }"  slot="edit">
               <Button type="primary" size="small" class='marBtn' @click='showNewlyAdded("bj",index)'>编辑</Button>
@@ -80,7 +80,15 @@
         @GoodsIDPageChange = 'GoodsIDPageChange'
         @hideGoodsIdModal = 'hideGoodsIdModal'
         @getGoodsId = 'getGoodsId'
-        ></goodsid-modal>
+        >
+      </goodsid-modal>
+      <Modal v-model="historyModal" width="600">
+        <Table border ref="selection" :columns="columnsHistory" :data="datasHistory" height="700">
+        </Table>
+        <div slot="footer">
+          <Button type="primary" size="large" @click="historyModal=false">确定</Button>
+        </div>
+      </Modal>
   </div>
 </template>
 <script>
@@ -94,6 +102,28 @@ export default {
   name: 'channelGoodsCommodity',
   data () {
     return {
+      datasHistory:[],
+      columnsHistory:[
+        {
+          title: '商品进价',
+          key: 'buyPrice',
+          align: 'center',
+          tooltip:true
+        },
+        {
+          title: '操作人姓名',
+          key: 'operatorName',
+          align: 'center',
+          tooltip:true
+        },
+        {
+          title: '修改时间',
+          key: 'updateDate',
+          align: 'center',
+          tooltip:true
+        },
+      ],
+      historyModal:false,
       //渠道
       channelList:[],
       // 商品
@@ -238,6 +268,21 @@ export default {
     }
   },
   methods: {
+    showHistory(id){
+      let data = {
+        id
+      }
+      netWork('/productChannelHistory/findProductChannelHistory',data).then(res=>{
+        if(res.data.code===200){
+          this.datasHistory = res.data.result;
+          this.historyModal = true;
+        }else if(res.data.code===500){
+          this.$Message.error(res.data.message);
+        }
+      }).catch(err=>{
+        this.$Message.error('网络连接失败或超时');
+      })
+    },
     getGoodsId(row){ //点击一行传过来的id
       console.log(row)
       this.formValidate.productId = row.id;

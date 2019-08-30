@@ -13,13 +13,12 @@
           <Button
             type="primary"
             size="small"
-            icon="md-create"
             style="margin-right: 5px"
             @click="editModal(scope.row)"
-          ></Button>
+          >编辑</Button>
 
           <!-- 删除按钮 -->
-          <Button type="error" size="small" icon="ios-trash" @click="delOne(scope.row)"></Button>
+          <Button type="error" size="small"  @click="delOne(scope.row)">删除</Button>
         </template>
       </Table>
       <Page :total="100" show-elevator />
@@ -174,8 +173,6 @@ export default {
             addMerchant(this.formValidate).then(backData => {
               console.log(backData);
               if (backData.data.code == 200) {
-                // 关闭弹框
-                this.addFormVisible = false;
                 // 重新获取数据
                 this.getMerchant();
                 this.$Message.info("新增成功");
@@ -197,7 +194,6 @@ export default {
           // console.log(backData);
           if (backData.data.code == 200) {
             this.$Message.info("修改成功");
-            this.editFormVisible = false;
             this.getMerchant();
             this.formValidate = {
               channelName: "", //渠道名称

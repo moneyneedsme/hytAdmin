@@ -10,7 +10,6 @@
       />
       <Button @click="getuserManagement">查询</Button>
       <Button type="primary" icon="md-add-circle" @click="addFormVisible = true">新增</Button>
-      <Button type="primary" icon="ios-share-alt" @click="exportData">导出</Button>
       <Table :columns="columns11" :data="dataTable" border height="700" ref="table">
         <!-- 操作 -->
         <template slot-scope="scope" slot="operation">
@@ -18,12 +17,11 @@
           <Button
             type="primary"
             size="small"
-            icon="md-create"
             style="margin-right: 5px"
             @click="enterEdit(scope.row)"
-          ></Button>
+          >编辑</Button>
           <!-- 删除按钮 -->
-          <Button type="error" size="small" icon="ios-trash" @click="delOne(scope.row)"></Button>
+          <Button type="error" size="small"  @click="delOne(scope.row)">删除</Button>
         </template>
 
         <!-- 状态按钮 -->
@@ -68,27 +66,23 @@
         <FormItem label="邮箱" prop="email">
           <Input v-model="formValidate.email" placeholder="邮箱"></Input>
         </FormItem>
+        <FormItem label="头像" prop="image">
+          <Input v-model="formValidate.image" placeholder="头像"></Input>
+        </FormItem>
         <FormItem label="出生日期" prop="date">
           <DatePicker type="date" v-model="formValidate.date"></DatePicker>
         </FormItem>
         <FormItem label="性别" prop="sex">
-          <Select v-model="formValidate.sex">
-            <Option value="1">男</Option>
-            <Option value="2">女</Option>
-          </Select>
+          <RadioGroup v-model="formValidate.sex">
+            <Radio label="1">男</Radio>
+            <Radio label="2">女</Radio>
+          </RadioGroup>
         </FormItem>
-        <FormItem label="用户类型" prop="type">
-          <Select v-model="formValidate.type">
-            <Option value="1">普通用户</Option>
-            <Option value="2">管理员</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="所属商户" prop="channelId">
-          <Select v-model="formValidate.channelId">
-            <Input search />
-            <Option value="1">普通用户</Option>
-            <Option value="2">管理员</Option>
-          </Select>
+        <FormItem label="角色" prop="roleID">
+          <RadioGroup v-model="formValidate.roleID">
+            <Radio label="1">管理员</Radio>
+            <Radio label="2">普通用户</Radio>
+          </RadioGroup>
         </FormItem>
         <FormItem label="所属部门" prop="deptId">
           <Select v-model="formValidate.deptId">
@@ -219,15 +213,15 @@ export default {
       // 数据结构
       columns11: [
         {
-          title: "#",
+          title: "用户名",
+          key: "userName",
           align: "center",
-          type: "index",
-          maxWidth: 60,
+          // maxWidth: 100,
           tooltip: true
         },
         {
-          title: "用户名",
-          key: "userName",
+          title: "头像",
+          key: "imageAddress",
           align: "center",
           // maxWidth: 100,
           tooltip: true
@@ -239,6 +233,14 @@ export default {
           // maxWidth: 100,
           tooltip: true
         },
+        {
+          title: "邮箱",
+          key: "email",
+          align: "center",
+          // maxWidth: 100,
+          tooltip: true
+        },
+        
         {
           title: "用户类型",
           key: "type",
@@ -272,7 +274,7 @@ export default {
           title: "操作",
           align: "center",
           slot: "operation",
-          maxWidth: 120,
+          // maxWidth: 120,
           tooltip: true
         }
       ],

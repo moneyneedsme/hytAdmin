@@ -30,13 +30,12 @@
           <Button
             type="primary"
             size="small"
-            icon="md-create"
             style="margin-right: 5px"
             @click="editModal(scope.row)"
-          ></Button>
+          >编辑</Button>
 
           <!-- 删除按钮 -->
-          <Button type="error" size="small" icon="ios-trash" @click="delOne(scope.row)"></Button>
+          <Button type="error" size="small" @click="delOne(scope.row)">删除</Button>
         </template>
       </Table>
       <Page :total="100" show-elevator />
@@ -73,7 +72,7 @@
             <Radio label="0">不启用</Radio>
             <Radio label="1">启用</Radio>
           </RadioGroup>
-        </FormItem> -->
+        </FormItem>-->
       </Form>
     </Modal>
   </div>
@@ -136,13 +135,6 @@ export default {
           tooltip: true
         },
         {
-          title: "状态",
-          align: "center",
-          slot: "enable",
-          maxWidth: 100,
-          tooltip: true
-        },
-        {
           title: "应用id",
           key: "appId",
           align: "center",
@@ -154,6 +146,13 @@ export default {
           key: "appSecret",
           align: "center",
           minWidth: 100,
+          tooltip: true
+        },
+        {
+          title: "状态",
+          align: "center",
+          slot: "enable",
+          maxWidth: 100,
           tooltip: true
         },
         {
@@ -174,7 +173,7 @@ export default {
           title: "操作",
           align: "center",
           slot: "operation",
-          maxWidth: 120,
+          Width: 200,
           tooltip: true
         }
       ],

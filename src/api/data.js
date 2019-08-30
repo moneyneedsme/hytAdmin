@@ -567,16 +567,18 @@ export const addDictData = ({
   dictId, //字典类型id
   operator, //操作人
   remark, //备注
-  sort //排序
+  sort, //排序
 }) => {
-  return baseURLAxios.post(`/dictData/addDictData`, {
-    dataName,
-    dataValue,
-    dictId,
-    operator,
-    remark,
-    sort
-  })
+  return baseURLAxios.post(`/dictData/addDictData`,
+    {
+      dataName,
+      dataValue,
+      dictId,
+      operator,
+      remark,
+      sort
+    }
+  )
 }
 
 // 暴露接口方法---删除字典数据信息

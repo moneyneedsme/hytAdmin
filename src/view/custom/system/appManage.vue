@@ -12,13 +12,12 @@
           <Button
             type="primary"
             size="small"
-            icon="md-create"
             style="margin-right: 5px"
             @click="editModal(scope.row)"
-          ></Button>
+          >编辑</Button>
 
           <!-- 删除按钮 -->
-          <Button type="error" size="small" icon="ios-trash" @click="delOne(scope.row)"></Button>
+          <Button type="error" size="small"  @click="delOne(scope.row)">删除</Button>
         </template>
       </Table>
       <Page :total="100" show-elevator />
@@ -40,9 +39,6 @@
         </FormItem>
         <FormItem label="应用描述" prop="appDesc">
           <Input v-model="formValidate.appDesc" placeholder="应用描述"></Input>
-        </FormItem>
-        <FormItem label="操作人" prop="operator">
-          <Input v-model="formValidate.operator" placeholder="操作人"></Input>
         </FormItem>
         <FormItem label="备注" prop="remark">
           <Input v-model="formValidate.remark" placeholder="备注"></Input>
@@ -84,7 +80,7 @@ export default {
       pageSize: 15, //页容量
       columns: [
         {
-          title: "#",
+          title: " ",
           align: "center",
           type: "index",
           maxWidth: 60,
@@ -112,13 +108,6 @@ export default {
           tooltip: true
         },
         {
-          title: "操作人",
-          key: "operator",
-          align: "center",
-          minWidth: 50,
-          tooltip: true
-        },
-        {
           title: "注册日期",
           key: "createDate",
           align: "center",
@@ -136,7 +125,7 @@ export default {
           title: "操作",
           align: "center",
           slot: "operation",
-          maxWidth: 120,
+          // maxWidth: 120,
           tooltip: true
         }
       ],
