@@ -3,11 +3,8 @@
 </template>
 
 <script>
-import giantTree from "vue-giant-tree";
-import { getMerchantTree } from "../../../api/data";
 export default {
   name: 'tree',
-  components:{giantTree},
   props:{
 		treeData:{
 			default:[]
