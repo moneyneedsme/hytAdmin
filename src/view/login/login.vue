@@ -72,7 +72,6 @@ export default {
               const AsyncRouter= this.filterAsyncRouter(data);
               this.$router.addRoutes(AsyncRouter);
               this.setAsyncRouter(AsyncRouter);
-              // localSave('dynamicRouters',JSON.stringify(AsyncRouter));
           }
         }else if(res.data.code===500){
           this.$Message.error(res.data.message);

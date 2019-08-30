@@ -10,10 +10,10 @@
         v-if="selectData.length"
       ></Cascader>
       <Button @click="getPageDatas">查询</Button>
-      <Button type="primary" @click="showNewlyAdded("xz")">新增</Button>
+      <Button type="primary" @click='showNewlyAdded("xz")'>新增</Button>
       <Table border ref="selection" :columns="columns" :data="datas" height="700">
         <template slot-scope="{ row, index }" slot="edit">
-          <Button type="primary" size="small" class="marBtn" @click="showNewlyAdded("bj",index)">编辑</Button>
+          <Button type="primary" size="small" class="marBtn" @click='showNewlyAdded("bj",index)'>编辑</Button>
           <Button type="error" size="small" @click="modalDel=true;delID=row.id;delIndex=index">删除</Button>
         </template>
         <template slot-scope="{ row}" slot="img">
@@ -121,6 +121,14 @@
         <Button type="primary" size="large" @click="Added(formValidate)">确定</Button>
       </div>
     </Modal>
+    <!--  -->
+    <!-- <viewer :images="tupians">
+      <i-col span="4" v-for="item in tupians" :key='item+index'>
+        <div class="detailed">
+          <img :src="item.img" alt="">
+        </div>
+      </i-col>
+    </viewer> -->
   </div>
 </template>
 <script>
@@ -131,6 +139,7 @@ export default {
   name: "goodsCommodity",
   data() {
     return {
+      // tupians:[],
       Upload, //上传文件地址
       Percentage: 0, //浮动百分比
       categoryIdValue: [],

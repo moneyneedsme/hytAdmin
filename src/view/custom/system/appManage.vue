@@ -35,7 +35,6 @@
             style="margin-right: 5px"
             @click="editModal(scope.row)"
           >编辑</Button>
-
           <!-- 删除按钮 -->
           <Button type="error" size="small" @click="delOne(scope.row)">删除</Button>
         </template>

@@ -122,4 +122,8 @@ export default {
 		padding-left: 0px;
 		padding-right:0px;
 	}
+	.ivu-table-cell img {
+    width: 33px;
+    height: 33px;
+  }
 </style>

@@ -73,7 +73,7 @@ export default {
       formValidate: {
         deptName: "", //部门名称
         pid:[], //父ID
-        sort: "" //排序
+        sort: 6 //排序
       },
       ruleValidate: {
         deptName: [
@@ -165,7 +165,7 @@ export default {
       this.$Message.info("取消新增");
       this.formValidate = {
         deptName: "", //部门名称
-        pid: "", //父ID
+        pid:[], //父ID
         sort: "" //排序
       };
     },
@@ -197,7 +197,7 @@ export default {
                 this.$Message.info("新增成功");
                 this.formValidate = {
                   deptName: "", //部门名称
-                  pid: "", //父ID
+                  pid:[], //父ID
                   sort: "" //排序
                 };
               }
@@ -214,7 +214,7 @@ export default {
             this.getdepartment();
             this.formValidate = {
               deptName: "", //部门名称
-              pid: "", //父ID
+              pid:[], //父ID
               sort: "" //排序
             };
           }
@@ -266,13 +266,25 @@ export default {
       searchDepartmentTreeByID({ id: 1 }).then(backData => {
         console.log(backData);
         if (backData.data.code === 200) {
-          this.selectData = backData.data.result;
+          this.selectData = this.forData(backData.data.result)
           console.log(backData.data.result);
         } else if (backData.data.code === 500) {
           this.$Message.error(res.data.message);
         }
       });
-    }
+    },
+    forData(array){
+				var ary = []
+        for(var i=0;i<array.length;i++){
+          ary[i] = {};
+          ary[i].value = array[i].value;
+          ary[i].label = array[i].label;
+					if(array[i].children){
+						ary[i].children = this.forData(array[i].children)
+					}
+				}
+				return ary
+    },
   },
 
   mounted() {

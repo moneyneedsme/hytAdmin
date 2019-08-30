@@ -64,6 +64,7 @@ export default {
         component: null,//前端组件
         type:'1',//类型
         backend:'2',//功能类型
+        redirect:null
       },
       showType:'zjd',
       showModal:false,
@@ -79,6 +80,7 @@ export default {
         component: null,//前端组件
         type:'1',//类型
         backend:'2',//功能类型
+        redirect:null
       },
     }
   },
@@ -104,7 +106,7 @@ export default {
     },
     Added(value){
       if(value.title&&value.path&&value.name&&value.icon&&value.component){
-        let {title,path,name,icon,component,backend,type} = value;
+        let {title,path,name,icon,component,backend,type,redirect} = value;
         let data;
         if(this.showType==='fjd'){
           data = {
@@ -115,7 +117,8 @@ export default {
             icon,
             component,
             backend,
-            type
+            type,
+            redirect
           }
           
         }else if(this.showType==='zjd'){
@@ -128,7 +131,8 @@ export default {
             icon,
             component,
             backend,
-            type
+            type,
+            redirect
           }
         }
         netWorkHttp('/permission/addPermission',data).then(res=>{
@@ -182,14 +186,15 @@ export default {
         return false;
       } 
       if(value.title&&value.path&&value.name&&value.icon&&value.component){
-        let {title,path,name,icon,component} = value;
+        let {title,path,name,icon,component,redirect} = value;
         let data = {
           id:this.treeID,
           title,
           path,
           name,
           icon,
-          component
+          component,
+          redirect
         }
         netWorkHttp('/permission/modifyPermission',data).then(res=>{
           if(res.data.code===200){

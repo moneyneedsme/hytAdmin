@@ -45,6 +45,7 @@ function refreshRoute (){
   netWorkHttp('/permission/queryUserMenu',data).then(res=>{
     if(res.data.code===200){
       const data = res.data.result;
+      console.log(data)
       const routers = getMenuByRouter(data);
       const originRouteNames = router.options.routes.map(r => r.name);
       // // 需要解决重复加入问题
@@ -88,9 +89,9 @@ router.beforeEach( async (to, from, next) => {
     if (store.state.user.hasGetInfo) {   //判断是否获取到数据
       // turnTo(to, store.state.user.access, next)   //store.state.user.access  == ['super_admin'] ['super_admin', 'admin']
       next();
-      if(!from.name){ //页面刷新 
-        refreshRoute();
-      }
+      // if(!from.name){ //页面刷新 
+      //   refreshRoute();
+      // }
     } else {
       store.dispatch('getUserInfo').then(user => {
         // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']

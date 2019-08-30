@@ -15,6 +15,9 @@
     <FormItem label="前端组件" prop="component">
       <Input v-model.trim="formValidate.component"></Input>
     </FormItem>
+    <FormItem label="重定向" >
+      <Input v-model.trim="formValidate.redirect" placeholder="不要轻易填写"></Input>
+    </FormItem>
     <FormItem label="类型" prop="type" v-if='showRadio'>
       <RadioGroup v-model="formValidate.type">
         <Radio label="1">菜单</Radio>

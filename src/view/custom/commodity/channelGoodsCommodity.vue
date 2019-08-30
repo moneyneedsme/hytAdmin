@@ -561,4 +561,8 @@ export default {
     text-align: center;
     margin-top: 10px;
   }
+  .ivu-table-cell img {
+    width: 33px;
+    height: 33px;
+  }
 </style>
