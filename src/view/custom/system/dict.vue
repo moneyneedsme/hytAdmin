@@ -30,7 +30,7 @@
         />
         <div class="dictContent">
           <Menu active-name="1" width="240" @on-select="selectRow">
-            <MenuItem :name="item.id" v-for="(item,index) in dictTypeList">
+            <MenuItem :name="item.id" v-for="(item) in dictTypeList" :key='item.id'>
               <Icon type="md-document" />
               {{item.name}}
             </MenuItem>
