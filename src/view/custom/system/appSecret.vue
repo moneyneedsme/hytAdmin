@@ -2,11 +2,29 @@
   <div>
     <Coustom-tree></Coustom-tree>
     <div>
-      <Input v-model="mchName" placeholder="请输入商户名称" @keyup.enter.native="getAppSecret" clearable />
-      <Button @click.native="getAppSecret">查询</Button>
+      <Input v-model="mchName" placeholder="商户名称" @keyup.enter.native="getAppSecret" clearable />
+      <Button @click="getAppSecret">查询</Button>
       <Button type="primary" icon="md-add-circle" @click="addModal">新增</Button>
+      <Button type="primary" icon="md-build">绑定协议</Button>
       <Button type="primary" icon="ios-share-alt">导出</Button>
       <Table :columns="columns" :data="dataTable" border height="700">
+        <!-- 状态按钮 -->
+        <template slot="enable" slot-scope="{ row, index }">
+          <Button
+            type="success"
+            v-if="row.enable==1"
+            size="small"
+            style="margin-right: 5px"
+            @click="show(index)"
+          >启用</Button>
+          <Button
+            type="error"
+            v-if="row.enable==0"
+            size="small"
+            style="margin-right: 5px"
+            @click="show(index)"
+          >不启用</Button>
+        </template>
         <template slot-scope="scope" slot="operation">
           <!-- 编辑按钮 -->
           <Button
@@ -27,22 +45,22 @@
     <!-- 弹框的模态框 -->
     <Modal
       v-model="isShow"
-      :title="isAdd==true?'新增【商户】':'编辑【商户】'"
-      @on-ok="getappSecretModal('formValidate')"
+      :title="isAdd==true?'新增【商户秘钥】':'编辑【商户秘钥】'"
+      @on-ok="getAppSecretModal('formValidate')"
       @on-cancel="cancel"
     >
       <Form ref="formValidate" :model="formValidate" :label-width="120">
-        <FormItem label="应用id" prop="appId">
-          <Input v-model="formValidate.appId" placeholder="应用id"></Input>
-        </FormItem>
-        <FormItem label="秘钥" prop="appSecret">
-          <Input v-model="formValidate.appSecret" placeholder="秘钥"></Input>
-        </FormItem>
         <FormItem label="商户号" prop="mchId">
-          <Input v-model="formValidate.mchId" placeholder="商户号"></Input>
+          <Input v-model="formValidate.mchId" placeholder="渠道名称"></Input>
         </FormItem>
         <FormItem label="商户名" prop="mchName">
           <Input v-model="formValidate.mchName" placeholder="商户名"></Input>
+        </FormItem>
+        <FormItem label="应用id" prop="appId">
+          <Input v-model="formValidate.appId" placeholder="应用id"></Input>
+        </FormItem>
+        <FormItem label="商户秘钥" prop="appSecret">
+          <Input v-model="formValidate.appSecret" placeholder="商户秘钥"></Input>
         </FormItem>
         <FormItem label="操作人" prop="operator">
           <Input v-model="formValidate.operator" placeholder="操作人"></Input>
@@ -72,7 +90,7 @@ export default {
   components: {
     CoustomTree
   },
-  name: "appSecret",
+  name: "info",
   data() {
     return {
       delFormVisible: false, //删除模态框显示方式
@@ -81,10 +99,10 @@ export default {
       //模态框表单数据
       formValidate: {
         appId: "", //应用id
-        appSecret: "", // 秘钥
+        appSecret: "", //秘钥
         enable: "", //是否启用
         mchId: "", //商户号
-        mchName: "", //商户名
+        mchName: "", //商户名称
         operator: "", //操作人
         remark: "" //备注
       },
@@ -104,45 +122,52 @@ export default {
           tooltip: true
         },
         {
-          title: "商户号",
+          title: "商户编号",
           key: "mchId",
           align: "center",
           minWidth: 100,
           tooltip: true
         },
         {
-          title: "商户名",
+          title: "商户名称",
           key: "mchName",
           align: "center",
-          // maxWidth: 100,
+          minWidth: 100,
+          tooltip: true
+        },
+        {
+          title: "状态",
+          align: "center",
+          slot: "enable",
+          maxWidth: 100,
           tooltip: true
         },
         {
           title: "应用id",
           key: "appId",
           align: "center",
-          minWidth: 50,
+          minWidth: 100,
           tooltip: true
         },
         {
-          title: "应用秘钥",
+          title: "商户秘钥",
           key: "appSecret",
+          align: "center",
+          minWidth: 100,
+          tooltip: true
+        },
+        {
+          title: "注册日期",
+          key: "createDate",
           align: "center",
           minWidth: 25,
           tooltip: true
         },
         {
-          title: "创建时间",
-          key: "createDate",
-          align: "center",
-          maxWidth: 120,
-          tooltip: true
-        },
-        {
-          title: "更新时间",
+          title: "到期日期",
           key: "updateDate",
           align: "center",
-          maxWidth: 120,
+          minWidth: 25,
           tooltip: true
         },
         {
@@ -163,6 +188,16 @@ export default {
 
     cancel() {
       this.$Message.info("取消操作");
+      //模态框表单数据清空
+      this.formValidate = {
+        appId: "", //应用id
+        appSecret: "", //秘钥
+        enable: "", //是否启用
+        mchId: "", //商户号
+        mchName: "", //商户名称
+        operator: "", //操作人
+        remark: "" //备注
+      };
     },
 
     // 新增点击事件
@@ -179,28 +214,25 @@ export default {
     },
 
     // 弹框确认的点击事件
-    getappSecretModal(name) {
+    getAppSecretModal(name) {
       if (this.isAdd == true) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            console.log(33333);
-            console.log(addappSecret);
             //对的
-            addappSecret(this.formValidate).then(backData => {
+            addAppSecret(this.formValidate).then(backData => {
               console.log(backData);
               if (backData.data.code == 200) {
                 // 关闭弹框
                 this.addFormVisible = false;
-                console.log(123);
                 // 重新获取数据
-                this.getappSecret();
+                this.getAppSecret();
                 this.$Message.info("新增成功");
                 this.formValidate = {
                   appId: "", //应用id
-                  appSecret: "", // 秘钥
+                  appSecret: "", //秘钥
                   enable: "", //是否启用
                   mchId: "", //商户号
-                  mchName: "", //商户名
+                  mchName: "", //商户名称
                   operator: "", //操作人
                   remark: "" //备注
                 };
@@ -211,14 +243,21 @@ export default {
           }
         });
       } else if (this.isAdd == false) {
-        console.log(11111);
-        
-        editappSecret(this.formValidate).then(backData => {
-          console.log(backData);
+        editAppSecret(this.formValidate).then(backData => {
+          // console.log(backData);
           if (backData.data.code == 200) {
             this.$Message.info("修改成功");
             this.editFormVisible = false;
-            this.getappSecret();
+            this.getAppSecret();
+            this.formValidate = {
+              appId: "", //应用id
+              appSecret: "", //秘钥
+              enable: "", //是否启用
+              mchId: "", //商户号
+              mchName: "", //商户名称
+              operator: "", //操作人
+              remark: "" //备注
+            };
           }
         });
       }
@@ -233,10 +272,10 @@ export default {
         title: "此操作将永久删除该用户, 是否继续?",
         // 点击了确定
         onOk: () => {
-          delappSecret({ channelId: row.id }).then(backData => {
+          delAppSecret({ id: row.id }).then(backData => {
             console.log(backData);
             if (backData.data.code == 200) {
-              this.getappSecret();
+              this.getAppSecret();
               this.$Message.info("删除成功");
             }
           });
@@ -248,14 +287,10 @@ export default {
       });
     },
 
-    // 获取商户信息
-    getappSecret() {
+    // 获取秘钥信息
+    getAppSecret() {
       appSecret({
-        appId: this.appId,
-        appSecret: this.appSecret,
-        enable: this.enable,
-        mchId: this.mchId,
-        mchName: this.mchName,
+        channelName: this.channelName,
         pageNum: this.pageNum,
         pageSize: this.pageSize
       }).then(backData => {
@@ -267,7 +302,7 @@ export default {
     }
   },
   mounted() {
-    this.getappSecret();
+    this.getAppSecret();
   }
 };
 </script>

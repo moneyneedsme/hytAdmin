@@ -2,10 +2,9 @@
   <div>
     <Coustom-tree></Coustom-tree>
     <div>
-      <Input v-model="channelName" placeholder="商户名称" @keyup.enter.native="getMerchant" clearable />
-      <Button @click="getMerchant">查询</Button>
+      <Input v-model="appName" placeholder="应用名称" @keyup.enter.native="getAppManage" clearable />
+      <Button @click="getAppManage">查询</Button>
       <Button type="primary" icon="md-add-circle" @click="addModal">新增</Button>
-      <Button type="primary" icon="md-build">绑定协议</Button>
       <Button type="primary" icon="ios-share-alt">导出</Button>
       <Table :columns="columns" :data="dataTable" border height="700">
         <template slot-scope="scope" slot="operation">
@@ -29,18 +28,18 @@
     <Modal
       v-model="isShow"
       :title="isAdd==true?'新增【商户】':'编辑【商户】'"
-      @on-ok="getMerchantModal('formValidate')"
+      @on-ok="getAppManageModal('formValidate')"
       @on-cancel="cancel"
     >
       <Form ref="formValidate" :model="formValidate" :label-width="120">
-        <FormItem label="渠道名称" prop="channelName">
-          <Input v-model="formValidate.channelName" placeholder="渠道名称"></Input>
+        <FormItem label="应用名称" prop="appName">
+          <Input v-model="formValidate.appName" placeholder="渠道名称"></Input>
         </FormItem>
-        <FormItem label="父id" prop="pid">
-          <Input v-model="formValidate.pid" placeholder="父id"></Input>
+        <FormItem label="应用id" prop="appId">
+          <Input v-model="formValidate.appId" placeholder="应用id"></Input>
         </FormItem>
-        <FormItem label="父ids" prop="pids">
-          <Input v-model="formValidate.pids" placeholder="父ids"></Input>
+        <FormItem label="应用描述" prop="appDesc">
+          <Input v-model="formValidate.appDesc" placeholder="应用描述"></Input>
         </FormItem>
         <FormItem label="操作人" prop="operator">
           <Input v-model="formValidate.operator" placeholder="操作人"></Input>
@@ -55,10 +54,10 @@
 <script>
 import CoustomTree from "../components/coustom-tree";
 import {
-  merchant,
-  addMerchant,
-  delMerchant,
-  editMerchant
+  appManage,
+  addAppManage,
+  delAppManage,
+  editAppManage
 } from "../../../api/data";
 export default {
   components: {
@@ -72,15 +71,17 @@ export default {
       isAdd: false, //判断当前弹框是否新增
       //模态框表单数据
       formValidate: {
-        channelName: "", //渠道名称
+        appId: "", //应用id
+        appDesc: "", // 应用描述
+        appName: "", //应用名称
         operator: "", //操作人
-        pid: "", //父id
-        pids: "", //父ids
         remark: "" //备注
       },
-      channelName: "", //商户名称
+      appId: "", //应用id
+      appDesc: "", // 应用描述
+      appName: "", //应用名称
       pageNum: 1, //页码
-      pageSize: 10, //页容量
+      pageSize: 15, //页容量
       columns: [
         {
           title: "#",
@@ -90,22 +91,29 @@ export default {
           tooltip: true
         },
         {
-          title: "商户名称",
-          key: "channelName",
+          title: "应用名称",
+          key: "appName",
           align: "center",
           minWidth: 100,
           tooltip: true
         },
         {
-          title: "联系人",
-          key: "contacts",
+          title: "应用id",
+          key: "appId",
           align: "center",
           maxWidth: 100,
           tooltip: true
         },
         {
-          title: "联系电话",
-          key: "phone",
+          title: "应用描述",
+          key: "appDesc",
+          align: "center",
+          minWidth: 50,
+          tooltip: true
+        },
+        {
+          title: "操作人",
+          key: "operator",
           align: "center",
           minWidth: 50,
           tooltip: true
@@ -142,6 +150,13 @@ export default {
 
     cancel() {
       this.$Message.info("取消操作");
+      this.formValidate = {
+        appId: "", //应用id
+        appDesc: "", // 应用描述
+        appName: "", //应用名称
+        operator: "", //操作人
+        remark: "" //备注
+      }
     },
 
     // 新增点击事件
@@ -158,24 +173,24 @@ export default {
     },
 
     // 弹框确认的点击事件
-    getMerchantModal(name) {
+    getAppManageModal(name) {
       if (this.isAdd == true) {
         this.$refs[name].validate(valid => {
           if (valid) {
             //对的
-            addMerchant(this.formValidate).then(backData => {
+            addAppManage(this.formValidate).then(backData => {
               console.log(backData);
               if (backData.data.code == 200) {
                 // 关闭弹框
                 this.addFormVisible = false;
                 // 重新获取数据
-                this.getMerchant();
+                this.getAppManage();
                 this.$Message.info("新增成功");
                 this.formValidate = {
-                  channelName: "", //渠道名称
+                  appId: "", //应用id
+                  appDesc: "", // 应用描述
+                  appName: "", //应用名称
                   operator: "", //操作人
-                  pid: "", //父id
-                  pids: "", //父ids
                   remark: "" //备注
                 };
               }
@@ -185,17 +200,17 @@ export default {
           }
         });
       } else if (this.isAdd == false) {
-        editMerchant(this.formValidate).then(backData => {
+        editAppManage(this.formValidate).then(backData => {
           // console.log(backData);
           if (backData.data.code == 200) {
             this.$Message.info("修改成功");
             this.editFormVisible = false;
-            this.getMerchant();
+            this.getAppManage();
             this.formValidate = {
-              channelName: "", //渠道名称
+              appId: "", //应用id
+              appDesc: "", // 应用描述
+              appName: "", //应用名称
               operator: "", //操作人
-              pid: "", //父id
-              pids: "", //父ids
               remark: "" //备注
             };
           }
@@ -212,10 +227,10 @@ export default {
         title: "此操作将永久删除该用户, 是否继续?",
         // 点击了确定
         onOk: () => {
-          delMerchant({ channelId: row.id }).then(backData => {
+          delAppManage({ id: row.id }).then(backData => {
             console.log(backData);
             if (backData.data.code == 200) {
-              this.getMerchant();
+              this.getAppManage();
               this.$Message.info("删除成功");
             }
           });
@@ -228,11 +243,13 @@ export default {
     },
 
     // 获取商户信息
-    getMerchant() {
-      merchant({
-        channelName: this.channelName,
-        pageNum: this.pageNum,
-        pageSize: this.pageSize
+    getAppManage() {
+      appManage({
+        appId:this.appId,
+        appDesc:this.appDesc,
+        appName:this.appName,
+        pageNum:this.pageNum,
+        pageSize:this.pageSize
       }).then(backData => {
         console.log(backData);
         if (backData.data.code == 200) {
@@ -242,7 +259,7 @@ export default {
     }
   },
   mounted() {
-    this.getMerchant();
+    this.getAppManage();
   }
 };
 </script>
