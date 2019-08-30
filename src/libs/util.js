@@ -405,3 +405,17 @@ export const setTitle = (routeItem, vm) => {
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle
 }
+
+//将后台传来的字符串替换为组件
+export const filterAsyncRouter = (asyncRouterMap)=>{
+  const accessedRouters = asyncRouterMap.filter(route => {
+  if (route.component) {
+    route.component =matchingRoute(route.component); //匹配路由
+  }
+  if (route.children && route.children.length) {
+    route.children = filterAsyncRouter(route.children)
+  }
+    return true
+  })
+  return accessedRouters
+}

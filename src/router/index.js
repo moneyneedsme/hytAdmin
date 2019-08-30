@@ -5,8 +5,10 @@ import store from '@/store'
 import iView from 'iview'
 import {localRead} from "@/libs/util";
 import dynamicRouters from '@/router/dynamicRouters';
+import {netWorkHttp} from '@/api/data';
 // import { setToken, getToken, canTurnTo, setTitle } from '@/libs/util'
-import { setToken, getToken,setTitle } from '@/libs/util'
+import { setToken, getToken,setTitle,getMenuByRouter } from '@/libs/util'
+import {matchingRoute} from '@/router/matching'
 import config from '@/config'
 const { homeName } = config
 
@@ -21,21 +23,48 @@ const LOGIN_PAGE_NAME = 'login'
 //   if (canTurnTo(to.name, access, routes)) next() // 有权限，可访问
 //   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 // }
-
+function filterAsyncRouter (asyncRouterMap){
+  const accessedRouters = asyncRouterMap.filter(route => {
+  if (route.component) {
+    route.component =matchingRoute(route.component); //匹配路由
+  }
+  if (route.children && route.children.length) {
+    route.children = filterAsyncRouter(route.children)
+  }
+    return true
+  })
+  return accessedRouters
+}
 //刷新路由
 function refreshRoute (){
-  // console.log(9999999999)
-  // console.log(localRead('dynamicRouters'))
-  const routersList = JSON.parse(localRead('dynamicRouters'));
-  const originRouteNames = router.options.routes.map(r => r.name);
-    // 需要解决重复加入问题
-  if (routersList && routersList.length && originRouteNames.indexOf(routersList[0].name) < 0) {
-      store.commit('setRoutersList',routersList)
-      setTimeout(()=>{
-        router.addRoutes(dynamicRouters) 
-        router.addRoutes([{ path: '*', redirect: '/404' }])
-      },1)
+  let data = {
+    channelId:1,
+    permissionType:1,
+    userType:2
   }
+  netWorkHttp('/permission/queryUserMenu',data).then(res=>{
+    if(res.data.code===200){
+      const data = res.data.result;
+      const routers = getMenuByRouter(data);
+      const originRouteNames = router.options.routes.map(r => r.name);
+      // // 需要解决重复加入问题
+      if (routers && routers.length && originRouteNames.indexOf(routers[0].name) < 0) {
+          const AsyncRouter= filterAsyncRouter(data);
+          router.addRoutes(AsyncRouter);
+          store.commit('setRoutersList',AsyncRouter)
+      }
+    }
+  })
+  // const routersList = JSON.parse(localRead('dynamicRouters'));
+  // const originRouteNames = router.options.routes.map(r => r.name);
+  //   // 需要解决重复加入问题
+  // if (routersList && routersList.length && originRouteNames.indexOf(routersList[0].name) < 0) {
+  //   store.commit('setRoutersList',routersList)
+  //     setTimeout(()=>{
+  //       router.addRoutes(routersList) 
+  //       router.addRoutes([{ path: '*', redirect: '/404' }])
+  //     },10)
+  // }
   console.log(store)
 }
 

@@ -82,8 +82,8 @@
         @getGoodsId = 'getGoodsId'
         >
       </goodsid-modal>
-      <Modal v-model="historyModal" width="600">
-        <Table border ref="selection" :columns="columnsHistory" :data="datasHistory" height="700">
+      <Modal v-model="historyModal" width="600" title="查看历史记录">
+        <Table border ref="selection" :columns="columnsHistory" :data="datasHistory" height="500">
         </Table>
         <div slot="footer">
           <Button type="primary" size="large" @click="historyModal=false">确定</Button>

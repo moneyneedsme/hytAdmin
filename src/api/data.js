@@ -58,9 +58,11 @@ export const saveErrorLogger = info => {
 //     method: 'get'
 //   })
 // }
+
+//商品模块
 export const netWork = (URL, info) => {
   return axios.request({
-    url: 'http://192.168.1.62:10007' + URL,
+    url: 'http://192.168.1.62:10003/product' + URL,
     data: info,
     method: 'post'
   })
