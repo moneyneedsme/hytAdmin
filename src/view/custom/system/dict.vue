@@ -39,7 +39,8 @@
       </Col>
       <Col class="span18" span="18">
         数据名称：
-        <Input style="width:200px;margin-right: 20px" placeholder="请输入数据名称" clearable />状态：
+        <Input style="width:200px;margin-right: 20px" placeholder="请输入数据名称" clearable />
+        状态：
         <Select v-model="model8" clearable style="width:200px">
           <Option v-for="item in List" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>

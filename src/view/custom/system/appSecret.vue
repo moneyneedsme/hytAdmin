@@ -2,11 +2,12 @@
   <div>
     <!-- <Coustom-tree></Coustom-tree> -->
     <div>
-      <Input v-model="mchName" placeholder="商户名称" @keyup.enter.native="getAppSecret" clearable />
+      商户名称：<Input style="margin:0 15px" v-model="mchName" placeholder="请输入商户名称" @keyup.enter.native="getAppSecret" clearable />
+      商户编号：<Input style="margin:0 15px" v-model="mchId" placeholder="请输入商户编号" @keyup.enter.native="getAppSecret" clearable />
+      应用ID：<Input style="margin:0 15px" v-model="appId" placeholder="请输入应用ID" @keyup.enter.native="getAppSecret" clearable />
+      商户秘钥：<Input style="margin:0 15px" v-model="appSecret" placeholder="请输入商户秘钥" @keyup.enter.native="getAppSecret" clearable />
       <Button @click="getAppSecret">查询</Button>
       <Button type="primary" icon="md-add-circle" @click="addModal">新增</Button>
-      <Button type="primary" icon="md-build">绑定协议</Button>
-      <Button type="primary" icon="ios-share-alt">导出</Button>
       <Table :columns="columns" :data="dataTable" border height="700">
         <!-- 状态按钮 -->
         <template slot="enable" slot-scope="{ row, index }">
@@ -48,11 +49,11 @@
       @on-ok="getAppSecretModal('formValidate')"
       @on-cancel="cancel"
     >
-      <Form ref="formValidate" :model="formValidate" :label-width="120">
+      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
         <FormItem label="商户号" prop="mchId">
-          <Input v-model="formValidate.mchId" placeholder="渠道名称"></Input>
+          <Input v-model="formValidate.mchId" placeholder="商户号"></Input>
         </FormItem>
-        <FormItem label="商户名" prop="mchName">
+        <FormItem label="商 户名" prop="mchName">
           <Input v-model="formValidate.mchName" placeholder="商户名"></Input>
         </FormItem>
         <FormItem label="应用id" prop="appId">
@@ -67,12 +68,12 @@
         <FormItem label="备注" prop="remark">
           <Input v-model="formValidate.remark" placeholder="备注"></Input>
         </FormItem>
-        <!-- <FormItem label="状态" prop="enable">
+        <FormItem label="状态" prop="enable">
           <RadioGroup v-model="formValidate.enable">
             <Radio label="0">不启用</Radio>
             <Radio label="1">启用</Radio>
           </RadioGroup>
-        </FormItem>-->
+        </FormItem>
       </Form>
     </Modal>
   </div>
@@ -104,6 +105,37 @@ export default {
         mchName: "", //商户名称
         operator: "", //操作人
         remark: "" //备注
+      },
+      ruleValidate: {
+        appId: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur"
+          }
+        ],
+        appSecret: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur"
+          }
+        ],
+        mchId: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur"
+          }
+        ],
+        mchName: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur"
+          }
+        ]
+
       },
       appId: "", //应用id
       appSecret: "", // 秘钥
@@ -177,7 +209,17 @@ export default {
           tooltip: true
         }
       ],
-      dataTable: []
+      dataTable: [],
+      List: [
+        {
+          value: "1",
+          label: "正常"
+        },
+        {
+          value: "0",
+          label: "禁用"
+        }
+      ],
     };
   },
   methods: {
