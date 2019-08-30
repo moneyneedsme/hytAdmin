@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Coustom-tree></Coustom-tree>
+    <!-- <Coustom-tree></Coustom-tree> -->
     <div>
       <Input v-model="deptName" placeholder="部门名称" @keyup.enter.native="getdepartment" clearable />
       <Button @click="getdepartment">查询</Button>

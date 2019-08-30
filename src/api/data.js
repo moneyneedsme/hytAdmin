@@ -537,6 +537,11 @@ export const editDictType = ({
   })
 }
 
+// 暴露接口方法---根据字典类型id查询字典类型信息
+export const searchDictTypeByID = ({ id }) => {
+  return baseURLAxios.get(`/dict/queryDictById?id=${id}`)
+}
+
 // 字典管理--字典数据篇
 // 暴露接口方法---获取字典数据信息
 export const dictData = ({
@@ -562,19 +567,15 @@ export const addDictData = ({
   dictId, //字典类型id
   operator, //操作人
   remark, //备注
-  sort, //排序
-  createDate, //创建时间
-  updateDate //修改时间
+  sort //排序
 }) => {
-  return baseURLAxios.post(`/dict/addDict`, {
+  return baseURLAxios.post(`/dictData/addDictData`, {
     dataName,
     dataValue,
     dictId,
     operator,
     remark,
-    sort,
-    createDate,
-    updateDate
+    sort
   })
 }
 

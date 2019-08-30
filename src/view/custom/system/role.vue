@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Coustom-tree></Coustom-tree>
+    <!-- <Coustom-tree></Coustom-tree> -->
     <div>
       <Input v-model="roleName" placeholder="角色名称" @keyup.enter.native="getRole" clearable />
       <Button @click="getRole">查询</Button>

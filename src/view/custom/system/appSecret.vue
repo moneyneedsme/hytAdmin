@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Coustom-tree></Coustom-tree>
+    <!-- <Coustom-tree></Coustom-tree> -->
     <div>
       <Input v-model="mchName" placeholder="商户名称" @keyup.enter.native="getAppSecret" clearable />
       <Button @click="getAppSecret">查询</Button>
