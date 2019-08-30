@@ -56,13 +56,12 @@
             <Button
               type="primary"
               size="small"
-              icon="md-create"
               style="margin-right: 5px"
               @click="editModalData(scope.row)"
-            ></Button>
+            >编辑</Button>
 
             <!-- 删除按钮 -->
-            <Button type="error" size="small" icon="ios-trash" @click="delOneData(scope.row)"></Button>
+            <Button type="error" size="small"  @click="delOneData(scope.row)">删除</Button>
           </template>
         </Table>
 

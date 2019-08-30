@@ -35,7 +35,11 @@
           <Input v-model="formValidate.deptName" placeholder="部门名称"></Input>
         </FormItem>
         <FormItem label="上级部门" prop="pid ">
-          <Input v-model="formValidate.pid " placeholder="上级部门"></Input>
+          <Cascader
+            :data="selectData"
+            v-model="formValidate.pid"
+            @on-change="selectChange"
+          ></Cascader>
         </FormItem>
         <FormItem label="排序号" prop="sort">
           <Input v-model="formValidate.sort" placeholder="排序号"></Input>
@@ -51,7 +55,8 @@ import {
   department,
   addDepartment,
   delDepartment,
-  editDepartment
+  editDepartment,
+  searchDepartmentTreeByID
 } from "../../../api/data";
 export default {
   components: {
@@ -60,13 +65,14 @@ export default {
   name: "department",
   data() {
     return {
+      selectData: [], //上级部门数据
       delFormVisible: false, //删除模态框显示方式
       isShow: false, //弹框显示状态
       isAdd: false, //判断当前弹框是否新增
       //新增模态框表单数据
       formValidate: {
         deptName: "", //部门名称
-        pid: "", //父ID
+        pid:[], //父ID
         sort: "" //排序
       },
       ruleValidate: {
@@ -151,6 +157,10 @@ export default {
       this.getdepartment();
     },
 
+    // 级联选择器
+    selectChange() {
+    },
+
     cancel() {
       this.$Message.info("取消新增");
       this.formValidate = {
@@ -192,8 +202,8 @@ export default {
                 };
               }
             });
-          } else {
-            this.$Message.error("新增失败");
+          } else if(backData.data.code == 500){
+            this.$Message.error(backData.data.message);
           }
         });
       } else if (this.isAdd == false) {
@@ -249,11 +259,25 @@ export default {
           this.dataTable = backData.data.result.list;
         }
       });
+    },
+
+    // 获取部门树
+    getselectData() {
+      searchDepartmentTreeByID({ id: 1 }).then(backData => {
+        console.log(backData);
+        if (backData.data.code === 200) {
+          this.selectData = backData.data.result;
+          console.log(backData.data.result);
+        } else if (backData.data.code === 500) {
+          this.$Message.error(res.data.message);
+        }
+      });
     }
   },
 
   mounted() {
     this.getdepartment();
+    this.getselectData();
   }
 };
 </script>

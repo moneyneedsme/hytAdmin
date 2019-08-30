@@ -2,10 +2,30 @@
   <div>
     <!-- <Coustom-tree></Coustom-tree> -->
     <div>
-      <Input v-model="appName" placeholder="应用名称" @keyup.enter.native="getAppManage" clearable />
+      应用id:
+      <Input
+        style="margin:0 15px"
+        v-model="appId"
+        placeholder="应用id"
+        @keyup.enter.native="getAppManage"
+        clearable
+      />应用名称:
+      <Input
+        style="margin:0 15px"
+        v-model="appName"
+        placeholder="应用名称"
+        @keyup.enter.native="getAppManage"
+        clearable
+      />应用描述:
+      <Input
+        style="margin:0 15px"
+        v-model="appDesc"
+        placeholder="应用描述"
+        @keyup.enter.native="getAppManage"
+        clearable
+      />
       <Button @click="getAppManage">查询</Button>
       <Button type="primary" icon="md-add-circle" @click="addModal">新增</Button>
-      <Button type="primary" icon="ios-share-alt">导出</Button>
       <Table :columns="columns" :data="dataTable" border height="700">
         <template slot-scope="scope" slot="operation">
           <!-- 编辑按钮 -->
@@ -17,7 +37,7 @@
           >编辑</Button>
 
           <!-- 删除按钮 -->
-          <Button type="error" size="small"  @click="delOne(scope.row)">删除</Button>
+          <Button type="error" size="small" @click="delOne(scope.row)">删除</Button>
         </template>
       </Table>
       <Page :total="100" show-elevator />
@@ -30,9 +50,9 @@
       @on-ok="getAppManageModal('formValidate')"
       @on-cancel="cancel"
     >
-      <Form ref="formValidate" :model="formValidate" :label-width="120">
+      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate"  :label-width="120">
         <FormItem label="应用名称" prop="appName">
-          <Input v-model="formValidate.appName" placeholder="渠道名称"></Input>
+          <Input v-model="formValidate.appName" placeholder="应用名称"></Input>
         </FormItem>
         <FormItem label="应用id" prop="appId">
           <Input v-model="formValidate.appId" placeholder="应用id"></Input>
@@ -72,6 +92,22 @@ export default {
         appName: "", //应用名称
         operator: "", //操作人
         remark: "" //备注
+      },
+      ruleValidate: {
+        appId: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur"
+          }
+        ],
+        appName: [
+          {
+            required: true,
+            message: "输入不能为空",
+            trigger: "blur"
+          }
+        ]
       },
       appId: "", //应用id
       appDesc: "", // 应用描述
@@ -145,7 +181,7 @@ export default {
         appName: "", //应用名称
         operator: "", //操作人
         remark: "" //备注
-      }
+      };
     },
 
     // 新增点击事件
@@ -184,8 +220,8 @@ export default {
                 };
               }
             });
-          } else {
-            this.$Message.error("新增失败");
+          } else if(backData.data.code == 500){
+            this.$Message.error(backData.data.message);
           }
         });
       } else if (this.isAdd == false) {
@@ -234,11 +270,11 @@ export default {
     // 获取商户信息
     getAppManage() {
       appManage({
-        appId:this.appId,
-        appDesc:this.appDesc,
-        appName:this.appName,
-        pageNum:this.pageNum,
-        pageSize:this.pageSize
+        appId: this.appId,
+        appDesc: this.appDesc,
+        appName: this.appName,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
       }).then(backData => {
         console.log(backData);
         if (backData.data.code == 200) {

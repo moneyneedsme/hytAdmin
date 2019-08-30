@@ -242,6 +242,11 @@ export const editDepartment = ({
   })
 }
 
+// 暴露接口方法---根据渠道id查询部门树
+export const searchDepartmentTreeByID = ({ id }) => {
+  return baseURLAxios.get(`/dept/queryDeptTreeByChannelId?channelId=${id}`)
+}
+
 // 角色篇
 // 暴露接口方法---获取角色信息
 export const role = ({ channelId, roleName, pageNum, pageSize }) => {

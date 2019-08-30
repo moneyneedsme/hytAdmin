@@ -185,8 +185,8 @@ export default {
                 };
               }
             });
-          } else {
-            this.$Message.error("新增失败");
+          } else if(backData.data.code == 500){
+            this.$Message.error(backData.data.message);
           }
         });
       } else if (this.isAdd == false) {
